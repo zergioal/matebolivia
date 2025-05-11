@@ -1,3 +1,34 @@
-echo "node_modules/
+# Node.js
+node_modules/
 .env
-.DS_Store" > .gitignore
+package-lock.json
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor config
+.vscode/
+.idea/
+*.swp
+
+# SO
+.DS_Store
+Thumbs.db
+
+# Output builds
+dist/
+build/
+.cache/
+.next/
+out/
+
+# Render y Netlify (por si luego agregas archivos específicos)
+.render/
+.netlify/
+
+# Otros
+*.log
+*.bak
