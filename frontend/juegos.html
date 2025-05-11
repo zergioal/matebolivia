@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ranking de Jugadores</title>
+  <link rel="stylesheet" href="estilos/style.css" />
+</head>
+<body>
+  <h1>🏆 Mejores Puntajes</h1>
+
+  <div id="filtro">
+    <label for="juegoSelect">Filtrar por juego:</label>
+    <select id="juegoSelect">
+      <option value="todos">Todos</option>
+      <option value="Operaciones básicas">Operaciones básicas</option>
+      <option value="Fracciones equivalentes">Fracciones equivalentes</option>
+    </select>
+  </div>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Juego</th>
+        <th>Puntaje</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody id="tablaPuntajes">
+      <!-- Aquí se insertarán los puntajes -->
+    </tbody>
+  </table>
+
+  <script type="module" src="scripts/juegos.js"></script>
+</body>
+</html>
