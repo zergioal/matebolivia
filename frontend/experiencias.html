@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MateBolivia</title>
+    <link rel="stylesheet" href="estilos/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="logo-titulo">
+        <img src="assets/logo.png" alt="Logo MateBolivia" class="logo" />
+        <h1>MateBolivia</h1>
+      </div>
+      <nav>
+        <ul class="navbar">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="juegos.html">Juegos</a></li>
+          <li><a href="recursos.html">Recursos Didácticos</a></li>
+          <li><a href="experiencias.html">Experiencias transformadoras</a></li>
+          <li><a href="olimpiadas.html">Olimpiadas</a></li>
+          <li><a href="acerca.html">Acerca de</a></li>
+          <li>
+            <a href="login.html" class="login-btn">Login / Registrarse</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="blog-experiencias">
+      <h2>Experiencias educativas transformadoras</h2>
+
+      <!-- Artículo 1 -->
+      <article class="experiencia">
+        <h3>1) Uso de la plataforma MateBolivia</h3>
+        <p class="meta">
+          Publicado el 10 de mayo de 2025 — Autor: Sergio Alcocer
+        </p>
+
+        <div class="galeria">
+          <img
+            src="assets/mate1.jpg"
+            alt="Foto 1"
+            class="foto-mini"
+            onclick="ampliar(this)"
+          />
+          <img
+            src="assets/mate2.jpg"
+            alt="Foto 2"
+            class="foto-mini"
+            onclick="ampliar(this)"
+          />
+          <img
+            src="assets/mate3.jpg"
+            alt="Foto 3"
+            class="foto-mini"
+            onclick="ampliar(this)"
+          />
+        </div>
+
+        <p>
+          Esta experiencia se desarrolló con el curso 2do de secundaria con la
+          finalidad de aprender jugando. Los estudiantes utilizaron la
+          plataforma MateBolivia para resolver problemas matemáticos de manera
+          interactiva. Se realizaron actividades de gamificación y se promovió
+          el trabajo colaborativo.
+        </p>
+
+        <div class="descargas">
+          <a href="https://drive.google.com/planificacion.pdf" target="_blank"
+            >📄 Descargar Planificación</a
+          >
+          <a href="https://drive.google.com/guia.pdf" target="_blank"
+            >📘 Descargar Guía de trabajo</a
+          >
+        </div>
+      </article>
+
+      <!-- Artículo 2 -->
+      <article class="experiencia">
+        <h3>2) Midiendo edificios con ayuda de la Trigonometría</h3>
+        <p class="meta">
+          Publicado el 11 de mayo de 2025 — Autor: Sergio Alcocer
+        </p>
+
+        <div class="galeria">
+          <img
+            src="assets/edificio1.jpg"
+            alt="Foto 1"
+            class="foto-mini"
+            onclick="ampliar(this)"
+          />
+          <img
+            src="assets/edificio2.jpg"
+            alt="Foto 2"
+            class="foto-mini"
+            onclick="ampliar(this)"
+          />
+          <img
+            src="assets/edificio3.jpg"
+            alt="Foto 3"
+            class="foto-mini"
+            onclick="ampliar(this)"
+          />
+        </div>
+
+        <p>
+          Esta experiencia se desarrolló en 5to de secundaria con la finalidad
+          de aplicar funciones trigonométricas para medir la altura de edificios
+          reales. Los estudiantes utilizaron transportadores, cálculos
+          matemáticos y teléfonos móviles para capturar los ángulos desde un
+          punto fijo.
+        </p>
+
+        <div class="descargas">
+          <a href="https://drive.google.com/planificacion.pdf" target="_blank"
+            >📄 Descargar Planificación</a
+          >
+          <a href="https://drive.google.com/guia.pdf" target="_blank"
+            >📘 Descargar Guía de trabajo</a
+          >
+        </div>
+      </article>
+
+      <!-- Artículo 3 -->
+      <article class="experiencia">
+        <h3>3) Aprendiendo lógica simbólica usando circuitos</h3>
+        <p class="meta">
+          Publicado el 11 de mayo de 2025 — Autor: Sergio Alcocer
+        </p>
+
+        <div class="galeria">
+          <img
+            src="assets/logic1.jpg"
+            alt="Foto circuito"
+            class="foto-mini"
+            onclick="ampliar(this)"
+          />
+          <img
+            src="assets/logic2.jpg"
+            alt="Foto tablero"
+            class="foto-mini"
+            onclick="ampliar(this)"
+          />
+        </div>
+
+        <p>
+          Esta propuesta conecta la lógica matemática con la electrónica básica.
+          Los estudiantes diseñaron pequeños circuitos con compuertas lógicas
+          usando materiales reciclados y kits de electrónica, comprendiendo de
+          manera práctica proposiciones, conectores lógicos y tablas de verdad.
+        </p>
+
+        <div class="descargas">
+          <a href="https://drive.google.com/plan-circuitos.pdf" target="_blank"
+            >📄 Descargar Planificación</a
+          >
+          <a href="https://drive.google.com/guia-circuitos.pdf" target="_blank"
+            >📘 Descargar Guía de trabajo</a
+          >
+        </div>
+      </article>
+    </main>
+
+    <footer>
+      <p>
+        © 2025 MateBolivia. Proyecto educativo desarrollado por Sergio Alcocer.
+      </p>
+    </footer>
+
+    <!-- MODAL para ver imagen ampliada -->
+    <div id="modal-foto" class="modal-foto">
+      <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+      <img class="contenido-modal" id="img-modal" src="" />
+    </div>
+
+    <script>
+      function ampliar(img) {
+        const modal = document.getElementById("modal-foto");
+        const modalImg = document.getElementById("img-modal");
+        modal.style.display = "flex";
+        modalImg.src = img.src;
+      }
+
+      function cerrarModal() {
+        document.getElementById("modal-foto").style.display = "none";
+      }
+    </script>
+  </body>
+</html>

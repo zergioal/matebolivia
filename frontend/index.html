@@ -1,29 +1,74 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Matemática con Juegos</title>
-  <link rel="stylesheet" href="estilos/style.css" />
-</head>
-<body>
-  <header>
-    <h1>🎮 Matemática con Juegos</h1>
-    <p>¡Aprende matemática jugando y compitiendo!</p>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inicio | MateBolivia</title>
+    <link rel="stylesheet" href="estilos/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- HEADER Y NAVBAR -->
+    <header>
+      <div class="logo-titulo">
+        <img src="assets/logo.png" alt="Logo MateBolivia" class="logo" />
+        <h1>MateBolivia</h1>
+      </div>
+      <nav>
+        <ul class="navbar">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="juegos.html">Juegos</a></li>
+          <li><a href="recursos.html">Recursos Didácticos</a></li>
+          <li><a href="experiencias.html">Experiencias transformadoras</a></li>
+          <li><a href="olimpiadas.html">Olimpiadas</a></li>
+          <li><a href="acerca.html">Acerca de</a></li>
+          <li>
+            <a href="login.html" class="login-btn">Login / Registrarse</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
 
-  <main>
-    <nav>
-      <ul>
-        <li><a href="juego1.html">Juego 1: Operaciones Básicas</a></li>
-        <li><a href="juego2.html">Juego 2: Fracciones Equivalentes</a></li>
-        <li><a href="juegos.html">🏆 Ver Ranking</a></li>
-      </ul>
-    </nav>
-  </main>
+    <main class="inicio">
+      <!-- CARRUSEL -->
+      <section class="carrusel">
+        <div class="imagenes-carrusel">
+          <img src="assets/slide1.jpg" alt="Juegos matemáticos" />
+          <img src="assets/slide2.jpg" alt="Aprendizaje digital" />
+          <img src="assets/slide3.jpg" alt="Gamificación educativa" />
+        </div>
+      </section>
 
-  <footer>
-    <p>&copy; 2025 - Proyecto Educa Innova por Sergio Alcocer</p>
-  </footer>
-</body>
+      <!-- BIENVENIDA -->
+      <section class="bienvenida">
+        <h2>¡Bienvenidos a MateBolivia!</h2>
+        <p>
+          Esta plataforma fue creada para transformar la forma en que enseñamos
+          y aprendemos Matemática en secundaria, a través del juego, la
+          tecnología y el pensamiento crítico.
+        </p>
+      </section>
+
+      <!-- DESCRIPCIÓN -->
+      <section class="descripcion">
+        <h3>¿Qué es MateBolivia?</h3>
+        <p>
+          MateBolivia es una plataforma web interactiva que integra juegos
+          digitales, actividades educativas y seguimiento del progreso para
+          hacer del aprendizaje matemático una experiencia divertida, accesible
+          e inclusiva. Está pensada para docentes comprometidos con la
+          innovación, y estudiantes con ganas de superarse.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        © 2025 MateBolivia. Proyecto educativo desarrollado por Sergio Alcocer.
+      </p>
+    </footer>
+  </body>
 </html>
