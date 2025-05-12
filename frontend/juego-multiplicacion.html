@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juego: Multiplicación de Enteros | MateBolivia</title>
+    <link rel="stylesheet" href="estilos/style.css" />
+    <link rel="stylesheet" href="estilos/juego-suma.css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <script src="scripts/juego-multiplicacion.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <div class="logo-titulo">
+        <img src="assets/logo.png" alt="Logo MateBolivia" class="logo" />
+        <h1>MateBolivia</h1>
+      </div>
+      <nav>
+        <ul class="navbar">
+          <li><a href="index.html">Inicio</a></li>
+          <li><a href="juegos.html">Juegos</a></li>
+          <li><a href="recursos.html">Recursos Didácticos</a></li>
+          <li><a href="experiencias.html">Experiencias transformadoras</a></li>
+          <li><a href="olimpiadas.html">Olimpiadas</a></li>
+          <li><a href="acerca.html">Acerca de</a></li>
+          <li>
+            <a href="login.html" class="login-btn">Login / Registrarse</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="juego-container">
+      <h2>Multiplicación de enteros</h2>
+
+      <div
+        id="contenedor-boton-iniciar"
+        style="display: flex; justify-content: center; margin-bottom: 20px"
+      >
+        <button id="btn-iniciar" class="reiniciar" onclick="prepararJuego()">
+          INICIAR
+        </button>
+      </div>
+
+      <div class="niveles">
+        <button
+          class="btn-nivel"
+          id="btn-facil"
+          onclick="setDificultad('facil')"
+        >
+          Nivel Fácil
+        </button>
+        <button
+          class="btn-nivel"
+          id="btn-medio"
+          onclick="setDificultad('medio')"
+        >
+          Nivel Medio
+        </button>
+        <button
+          class="btn-nivel"
+          id="btn-dificil"
+          onclick="setDificultad('dificil')"
+        >
+          Nivel Difícil
+        </button>
+      </div>
+
+      <div id="bloque-juego" style="display: none">
+        <div id="cronometro" class="cronometro">⏱️ Tiempo: 0.0 s</div>
+        <div class="pregunta" id="pregunta"></div>
+        <div class="opciones" id="opciones"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="puntaje-final" id="puntaje-final"></div>
+        <button class="reiniciar" onclick="reiniciarJuego()">Reiniciar</button>
+      </div>
+    </main>
+
+    <footer>
+      <p>
+        © 2025 MateBolivia. Proyecto educativo desarrollado por Sergio Alcocer.
+      </p>
+    </footer>
+  </body>
+</html>
