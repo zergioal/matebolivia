@@ -196,3 +196,40 @@ window.reiniciarJuego = function reiniciarJuego() {
   document.getElementById("puntaje-final").textContent = "";
   document.getElementById("cronometro").textContent = "⏱️ Tiempo: 0.0 s";
 };
+
+const BACKEND = "http://localhost:5000"; // ⬅️ cambia por tu URL
+
+function cargarTopSuma(nivel) {
+  fetch(`${BACKEND}/api/scores/top?juego=suma-enteros&nivel=${nivel}`)
+    .then((r) => r.json())
+    .then((lista) => {
+      const ul = document.getElementById("lista-top-suma");
+      ul.innerHTML = "";
+      lista.forEach((p, i) => {
+        ul.innerHTML += `<li>#${i + 1} ${p.nombre} (${p.unidad}) – ${
+          p.puntaje
+        } pts / ${p.tiempo}s</li>`;
+      });
+    })
+    .catch((err) => console.error("Top 10 error:", err));
+}
+
+function guardarPuntajeSuma(puntajeFinal, tiempoTotal, nivel) {
+  const datos = {
+    nombre: prompt("Tu nombre:") || "Anónimo",
+    unidad: prompt("Unidad Educativa:") || "Sin unidad",
+    puntaje: puntajeFinal,
+    tiempo: tiempoTotal,
+    nivel,
+    juego: "suma-enteros",
+  };
+  fetch(`${BACKEND}/api/scores`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(datos),
+  })
+    .then((r) => {
+      if (r.ok) cargarTopSuma(nivel);
+    })
+    .catch((err) => console.error("Guardar puntaje error:", err));
+}

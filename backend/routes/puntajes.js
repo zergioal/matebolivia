@@ -1,32 +1,31 @@
-const express = require("express");
-const router = express.Router();
-const Puntaje = require("../models/Puntaje");
+import express from "express";
+import Puntaje from "../models/Puntaje.js";
 
-// POST: guardar puntaje
+const router = express.Router();
+
+// POST: Guardar puntaje
 router.post("/", async (req, res) => {
   try {
     const nuevo = new Puntaje(req.body);
     await nuevo.save();
-    res.status(201).json({ message: "Puntaje guardado correctamente" });
+    res.status(201).json({ message: "Puntaje guardado" });
   } catch (err) {
-    console.error("Error al guardar puntaje:", err);
     res.status(500).json({ error: "Error al guardar puntaje" });
   }
 });
 
-// GET: obtener top 10 por juego y nivel
+// GET: Top 10 por juego y nivel
 router.get("/top", async (req, res) => {
-  const { juego, nivel } = req.query;
   try {
+    const { juego, nivel } = req.query;
     const top = await Puntaje.find({ juego, nivel })
       .sort({ puntaje: -1, tiempo: 1 }) // mayor puntaje, menor tiempo
       .limit(10)
       .select("nombre unidad puntaje tiempo");
     res.json(top);
   } catch (err) {
-    console.error("Error al obtener top:", err);
     res.status(500).json({ error: "Error al obtener top" });
   }
 });
 
-module.exports = router;
+export default router;
