@@ -1,0 +1,180 @@
+body {
+  background-color: #f4f9ff;
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.juego-drag-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.titulo-juego {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #0d47a1;
+}
+
+.instrucciones {
+  font-size: 1.1rem;
+  margin-bottom: 30px;
+  color: #555;
+}
+
+.tablero {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.columna {
+  flex: 1;
+  min-width: 300px;
+  padding: 10px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+}
+
+.fraccion-card {
+  background-color: #e3f2fd;
+  border: 2px dashed #2196f3;
+  margin: 10px auto;
+  padding: 14px;
+  font-size: 1.4rem;
+  color: #0d47a1;
+  cursor: grab;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.fraccion-card:active {
+  cursor: grabbing;
+  opacity: 0.7;
+}
+
+.fraccion-target {
+  background-color: #f0f0f0;
+  border: 2px solid #cfd8dc;
+  margin: 16px auto;
+  padding: 20px;
+  font-size: 1.4rem;
+  color: #37474f;
+  min-height: 60px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.fraccion-target.hovered {
+  background-color: #c5e1a5; /* verde suave */
+  border-color: #558b2f;
+}
+
+.feedback {
+  margin-top: 30px;
+  font-size: 1.2rem;
+  color: #2e7d32;
+  font-weight: 500;
+}
+
+footer {
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 40px;
+  background: #0d47a1;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+.cronometro,
+.puntaje {
+  font-weight: 600;
+  margin: 10px 0;
+  color: #0d47a1;
+}
+
+/* Botones de dificultad */
+.botones-nivel {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.btn-nivel {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-nivel:hover {
+  background-color: #bbdefb;
+}
+
+.btn-nivel.seleccionado {
+  background-color: #0d47a1;
+  color: white;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenedores alineados */
+.tablero {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+.columna {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Tarjetas y objetivos */
+.fraccion-card,
+.fraccion-target {
+  background-color: #f9f9f9;
+  border: 2px dashed #90caf9;
+  padding: 12px;
+  margin: 12px auto;
+  font-size: 1.4rem;
+  text-align: center;
+  border-radius: 10px;
+  cursor: grab;
+  transition: transform 0.2s, background-color 0.3s;
+}
+
+.fraccion-card:hover {
+  background-color: #e3f2fd;
+  transform: scale(1.05);
+}
+
+.fraccion-target.hovered {
+  background-color: #c8e6c9;
+  border-color: #2e7d32;
+}
+
+.fraccion-target.completo {
+  background-color: #a5d6a7;
+  border-style: solid;
+  font-weight: bold;
+}
+
+/* Cronómetro y puntaje */
+.cronometro,
+.puntaje {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 10px 0;
+  color: #1565c0;
+}

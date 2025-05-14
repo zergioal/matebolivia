@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fracciones Equivalentes - Arrastra y Suelta | MateBolivia</title>
+    <link rel="stylesheet" href="estilos/style.css" />
+    <link rel="stylesheet" href="estilos/fracciones-drag.css" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- HEADER Y NAVBAR -->
+    <header>
+      <!-- <div
+        class="container-fluid d-flex align-items-center justify-content-between py-3 px-4"
+      >
+        <img src="assets/logo.png" class="img-fluid" style="width: 80px" />
+        <h1 class="h2 fw-bold text-primary">MateBolivia</h1>
+      </div> -->
+
+      <nav class="navbar navbar-expand-lg navbar-dark bg-edu shadow-sm py-3">
+        <div class="container">
+          <a
+            class="navbar-brand d-flex align-items-center gap-2"
+            href="index.html"
+          >
+            <img
+              src="assets/logo.png"
+              alt="Logo MateBolivia"
+              class="logo-navbar"
+            />
+            <span class="titulo-navbar">MateBolivia</span>
+          </a>
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarContenido"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarContenido">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="index.html">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="juegos.html">Juegos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="recursos.html">Recursos</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="experiencias.html">Experiencias</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="olimpiadas.html">Olimpiadas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="acerca.html">Acerca</a>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-outline-light ms-2" href="login.html"
+                  >Login / Registrarse</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="juego-drag-container">
+      <h2 class="titulo-juego">Arrastra las fracciones equivalentes</h2>
+      <div class="botones-nivel">
+        <button id="btn-facil" class="btn-nivel">Fácil</button>
+        <button id="btn-medio" class="btn-nivel">Medio</button>
+        <button id="btn-dificil" class="btn-nivel">Difícil</button>
+      </div>
+      <p class="instrucciones">
+        Arrastra las fracciones del lado izquierdo hacia su equivalente correcto
+        del lado derecho.
+      </p>
+
+      <div class="tablero">
+        <div class="columna izquierda" id="fracciones-origen">
+          <!-- Fracciones a arrastrar -->
+          <div class="fraccion-card" draggable="true" data-equivalente="1/2">
+            \( \frac{2}{4} \)
+          </div>
+          <div class="fraccion-card" draggable="true" data-equivalente="2/3">
+            \( \frac{4}{6} \)
+          </div>
+          <div class="fraccion-card" draggable="true" data-equivalente="3/4">
+            \( \frac{6}{8} \)
+          </div>
+        </div>
+
+        <div class="columna derecha" id="fracciones-destino">
+          <!-- Destinos -->
+          <div class="fraccion-target" data-objetivo="3/4">
+            \( \frac{3}{4} \)
+          </div>
+          <div class="fraccion-target" data-objetivo="1/2">
+            \( \frac{1}{2} \)
+          </div>
+          <div class="fraccion-target" data-objetivo="2/3">
+            \( \frac{2}{3} \)
+          </div>
+        </div>
+      </div>
+
+      <div id="feedback-juego" class="feedback"></div>
+    </main>
+
+    <footer>
+      <p>
+        © 2025 MateBolivia. Proyecto educativo desarrollado por el Prof. Sergio
+        Alcocer.
+      </p>
+    </footer>
+
+    <script src="scripts/fracciones-drag.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
