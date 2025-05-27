@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Puntaje = require("../models/Puntaje");
+const Puntaje = require("../models/Puntaje"); // Esto está bien
 
 // POST: guardar puntaje
 router.post("/", async (req, res) => {
@@ -25,8 +25,9 @@ router.get("/top", async (req, res) => {
         .json({ error: "Faltan parámetros: juego o nivel" });
     }
 
-    const scores = await Score.find({ juego, nivel })
-      .sort({ puntaje: -1, tiempo: 1 }) // mayor puntaje y menor tiempo
+    // ✅ Cambiar Score por Puntaje aquí
+    const scores = await Puntaje.find({ juego, nivel })
+      .sort({ puntaje: -1, tiempo: 1 })
       .limit(10);
 
     res.json(scores);

@@ -11,12 +11,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Ruta de prueba para el inicio
+// ✅ Ruta de prueba para verificar que el backend responde
 app.get("/", (req, res) => {
   res.send("🎉 Backend MateBolivia activo");
 });
 
-// Aquí usas la ruta base
+// ✅ Esta línea es la más importante: vincula las rutas
 app.use("/api/scores", scoreRoutes);
 
 mongoose
