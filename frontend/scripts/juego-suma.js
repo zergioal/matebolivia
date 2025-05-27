@@ -49,6 +49,7 @@ function iniciarJuego() {
     btn.classList.remove("seleccionado");
   });
   document.getElementById(`btn-${dificultad}`).classList.add("seleccionado");
+  cargarTopSuma(dificultad);
 }
 
 function formatoParentesis(n) {
@@ -181,6 +182,9 @@ function siguientePregunta() {
     document.getElementById(
       "puntaje-final"
     ).textContent = `Tu puntaje: ${puntaje} / ${totalPreguntas}`;
+
+    // Guardar en base de datos
+    guardarPuntajeSuma(puntaje, (tiempoTotal / 1000).toFixed(1), dificultad);
   }
 }
 
@@ -197,7 +201,7 @@ window.reiniciarJuego = function reiniciarJuego() {
   document.getElementById("cronometro").textContent = "⏱️ Tiempo: 0.0 s";
 };
 
-const BACKEND = "http://localhost:5000"; // ⬅️ cambia por tu URL
+const BACKEND = "https://juegosbackend.onrender.com"; // ⬅️ cambia por tu URL
 
 function cargarTopSuma(nivel) {
   fetch(`${BACKEND}/api/scores/top?juego=suma-enteros&nivel=${nivel}`)
@@ -206,9 +210,9 @@ function cargarTopSuma(nivel) {
       const ul = document.getElementById("lista-top-suma");
       ul.innerHTML = "";
       lista.forEach((p, i) => {
-        ul.innerHTML += `<li>#${i + 1} ${p.nombre} (${p.unidad}) – ${
+        ul.innerHTML += `<li>#${i + 1} ${p.nombre} (${p.unidad}) - ${
           p.puntaje
-        } pts / ${p.tiempo}s</li>`;
+        } pts / ${p.tiempo}s</li>`;
       });
     })
     .catch((err) => console.error("Top 10 error:", err));
@@ -216,8 +220,8 @@ function cargarTopSuma(nivel) {
 
 function guardarPuntajeSuma(puntajeFinal, tiempoTotal, nivel) {
   const datos = {
-    nombre: prompt("Tu nombre:") || "Anónimo",
-    unidad: prompt("Unidad Educativa:") || "Sin unidad",
+    nombre: prompt("Tu nombre:") || "Anónimo",
+    unidad: prompt("Unidad Educativa:") || "Sin unidad",
     puntaje: puntajeFinal,
     tiempo: tiempoTotal,
     nivel,
