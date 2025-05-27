@@ -16,16 +16,23 @@ router.post("/", async (req, res) => {
 
 // GET: obtener top 10 por juego y nivel
 router.get("/top", async (req, res) => {
-  const { juego, nivel } = req.query;
   try {
-    const top = await Puntaje.find({ juego, nivel })
-      .sort({ puntaje: -1, tiempo: 1 }) // mayor puntaje, menor tiempo
-      .limit(10)
-      .select("nombre unidad puntaje tiempo");
-    res.json(top);
+    const { juego, nivel } = req.query;
+
+    if (!juego || !nivel) {
+      return res
+        .status(400)
+        .json({ error: "Faltan parámetros: juego o nivel" });
+    }
+
+    const scores = await Score.find({ juego, nivel })
+      .sort({ puntaje: -1, tiempo: 1 }) // mayor puntaje y menor tiempo
+      .limit(10);
+
+    res.json(scores);
   } catch (err) {
-    console.error("Error al obtener top:", err);
-    res.status(500).json({ error: "Error al obtener top" });
+    console.error(err);
+    res.status(500).json({ error: "Error al obtener los puntajes" });
   }
 });
 

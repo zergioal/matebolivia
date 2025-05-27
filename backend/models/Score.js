@@ -1,10 +1,12 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const scoreSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
-  juego: { type: String, required: true },
-  puntaje: { type: Number, required: true },
-  fecha: { type: Date, default: Date.now }
+  nombre: String,
+  unidad: String,
+  puntaje: Number,
+  tiempo: Number,
+  nivel: String,
+  juego: String,
 });
 
-module.exports = mongoose.model('Score', scoreSchema);
+module.exports = mongoose.model("Score", scoreSchema);
