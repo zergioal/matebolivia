@@ -49,6 +49,7 @@ function iniciarJuego() {
     btn.classList.remove("seleccionado");
   });
   document.getElementById(`btn-${dificultad}`).classList.add("seleccionado");
+  cargarTopResta(dificultad);
 }
 
 function formatoParentesis(n) {
@@ -194,6 +195,7 @@ function siguientePregunta() {
     document.getElementById(
       "puntaje-final"
     ).textContent = `Tu puntaje: ${puntaje} / ${totalPreguntas}`;
+    guardarPuntajeResta(puntaje, (tiempoTotal / 1000).toFixed(1), dificultad);
   }
 }
 
@@ -209,3 +211,40 @@ window.reiniciarJuego = function reiniciarJuego() {
   document.getElementById("puntaje-final").textContent = "";
   document.getElementById("cronometro").textContent = "⏱️ Tiempo: 0.0 s";
 };
+
+const BACKEND = "https://juegosbackend.onrender.com"; // Url RENDER del backend
+
+function cargarTopResta(nivel) {
+  fetch(`${BACKEND}/api/scores/top?juego=resta-enteros&nivel=${nivel}`)
+    .then((r) => r.json())
+    .then((lista) => {
+      const ul = document.getElementById("lista-top-resta");
+      ul.innerHTML = "";
+      lista.forEach((p, i) => {
+        ul.innerHTML += `<li>#${i + 1} ${p.nombre} (${p.unidad}) - ${
+          p.puntaje
+        } pts / ${p.tiempo}s</li>`;
+      });
+    })
+    .catch((err) => console.error("Top 10 error:", err));
+}
+
+function guardarPuntajeResta(puntajeFinal, tiempoTotal, nivel) {
+  const datos = {
+    nombre: prompt("Tu nombre:") || "Anónimo",
+    unidad: prompt("Unidad Educativa:") || "Sin unidad",
+    puntaje: puntajeFinal,
+    tiempo: tiempoTotal,
+    nivel,
+    juego: "resta-enteros",
+  };
+  fetch(`${BACKEND}/api/scores`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(datos),
+  })
+    .then((r) => {
+      if (r.ok) cargarTopResta(nivel);
+    })
+    .catch((err) => console.error("Guardar puntaje error:", err));
+}

@@ -15,19 +15,20 @@ router.post("/", async (req, res) => {
 });
 
 // GET: obtener top 10 por juego y nivel
+// GET: obtener top 10 por juego (opcional: nivel)
 router.get("/top", async (req, res) => {
   try {
     const { juego, nivel } = req.query;
 
-    if (!juego || !nivel) {
-      return res
-        .status(400)
-        .json({ error: "Faltan parámetros: juego o nivel" });
+    if (!juego) {
+      return res.status(400).json({ error: "Falta el parámetro: juego" });
     }
 
-    // ✅ Cambiar Score por Puntaje aquí
-    const scores = await Puntaje.find({ juego, nivel })
-      .sort({ puntaje: -1, tiempo: 1 })
+    const filtro = { juego };
+    if (nivel) filtro.nivel = nivel;
+
+    const scores = await Puntaje.find(filtro)
+      .sort({ puntaje: -1, tiempo: 1 }) // mayor puntaje, menor tiempo
       .limit(10);
 
     res.json(scores);
