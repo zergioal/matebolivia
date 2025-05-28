@@ -237,3 +237,7 @@ function guardarPuntajeSuma(puntajeFinal, tiempoTotal, nivel) {
     })
     .catch((err) => console.error("Guardar puntaje error:", err));
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarTopSumaGlobal(); // Carga el ranking al abrir la página
+});
