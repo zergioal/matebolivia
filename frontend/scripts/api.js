@@ -19,9 +19,9 @@ export async function guardarPuntaje(nombre, juego, puntaje) {
     });
 
     const resultado = await respuesta.json();
-    console.log('✅ Puntaje guardado correctamente:', resultado);
+    console.log('Puntaje guardado correctamente:', resultado);
   } catch (error) {
-    console.error('❌ Error al guardar el puntaje:', error);
+    console.error('Error al guardar el puntaje:', error);
   }
 }
 
@@ -35,7 +35,7 @@ export async function obtenerPuntajes() {
     const datos = await respuesta.json();
     return datos;
   } catch (error) {
-    console.error('❌ Error al obtener puntajes:', error);
+    console.error('Error al obtener puntajes:', error);
     return [];
   }
 }
