@@ -29,7 +29,14 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Nivel inválido" });
     }
 
-    if (juego !== "suma-enteros") {
+    const juegosPermitidos = [
+      "suma-enteros",
+      "resta-enteros",
+      "multiplicacion-enteros",
+      "division-enteros",
+      "fracciones-equivalentes",
+    ];
+    if (!juegosPermitidos.includes(juego)) {
       return res.status(400).json({ error: "Juego inválido" });
     }
 
