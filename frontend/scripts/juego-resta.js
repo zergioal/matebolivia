@@ -1,9 +1,10 @@
-// juego-resta.js (versión optimizada con configuración editable)
+// juego-resta.js
 
-// RANGOS CONFIGURABLES
 const FACIL_RANGO = 10;
 const MEDIO_RANGO = 20;
 const DIFICIL_RANGO = 25;
+const totalPreguntas = 10;
+const BACKEND = "https://juegosbackend.onrender.com";
 
 let dificultad = "facil";
 let tiempoInicio = null;
@@ -12,7 +13,6 @@ let tiempoTotal = 0;
 let puntaje = 0;
 let actual = 0;
 let preguntas = [];
-const totalPreguntas = 10;
 
 window.prepararJuego = function prepararJuego() {
   document.getElementById("contenedor-boton-iniciar").style.display = "none";
@@ -49,6 +49,7 @@ function iniciarJuego() {
     btn.classList.remove("seleccionado");
   });
   document.getElementById(`btn-${dificultad}`).classList.add("seleccionado");
+
   cargarTopResta(dificultad);
 }
 
@@ -143,20 +144,29 @@ function actualizarCronometro() {
 
 function mostrarPregunta() {
   const p = preguntas[actual];
+  const opcionesContainer = document.getElementById("opciones");
   document.getElementById("pregunta").innerHTML = p.enunciado;
-  const opcionesHTML = p.opciones
-    .map(
-      (op) =>
-        `<button class="opcion" onclick="verificarRespuesta(${op})">\\(${op}\\)</button>`
-    )
-    .join("");
-  document.getElementById("opciones").innerHTML = opcionesHTML;
+
+  opcionesContainer.innerHTML = "";
   document.getElementById("feedback").textContent = "";
+
+  p.opciones.forEach((op) => {
+    const btn = document.createElement("button");
+    btn.classList.add("opcion");
+    btn.dataset.respuesta = op;
+    btn.innerHTML = `\\(${op}\\)`;
+    btn.addEventListener("click", () => verificarRespuesta(Number(op), btn));
+    opcionesContainer.appendChild(btn);
+  });
+
   MathJax.typesetPromise();
   iniciarCronometro();
 }
 
-window.verificarRespuesta = function verificarRespuesta(seleccionada) {
+window.verificarRespuesta = function verificarRespuesta(
+  seleccionada,
+  botonClickeado
+) {
   document.querySelectorAll(".opcion").forEach((btn) => (btn.disabled = true));
   detenerCronometro();
   const correcta = preguntas[actual].correcta;
@@ -166,15 +176,17 @@ window.verificarRespuesta = function verificarRespuesta(seleccionada) {
     puntaje++;
     feedback.textContent = "¡Correcto!";
     feedback.style.color = "green";
-    document
-      .querySelector(`.opcion[onclick*="${seleccionada}"]`)
-      .classList.add("correcta");
+    botonClickeado.classList.add("correcta");
   } else {
     feedback.textContent = `Incorrecto. Era ${correcta}`;
     feedback.style.color = "red";
-    document
-      .querySelector(`.opcion[onclick*="${seleccionada}"]`)
-      .classList.add("incorrecta");
+    botonClickeado.classList.add("incorrecta");
+
+    document.querySelectorAll(".opcion").forEach((btn) => {
+      if (Number(btn.dataset.respuesta) === correcta) {
+        btn.classList.add("correcta");
+      }
+    });
   }
 
   setTimeout(() => siguientePregunta(), 1500);
@@ -189,13 +201,14 @@ function siguientePregunta() {
     document.getElementById("opciones").innerHTML = "";
     document.getElementById("feedback").textContent = "";
     detenerCronometro();
-    document.getElementById("cronometro").textContent = `⏱️ Tiempo total: ${(
-      tiempoTotal / 1000
-    ).toFixed(1)} s`;
+    const tiempoFinal = (tiempoTotal / 1000).toFixed(1);
+    document.getElementById(
+      "cronometro"
+    ).textContent = `⏱️ Tiempo total: ${tiempoFinal} s`;
     document.getElementById(
       "puntaje-final"
     ).textContent = `Tu puntaje: ${puntaje} / ${totalPreguntas}`;
-    guardarPuntajeResta(puntaje, (tiempoTotal / 1000).toFixed(1), dificultad);
+    guardarPuntajeResta(puntaje, Number(tiempoFinal), dificultad);
   }
 }
 
@@ -212,8 +225,6 @@ window.reiniciarJuego = function reiniciarJuego() {
   document.getElementById("cronometro").textContent = "⏱️ Tiempo: 0.0 s";
 };
 
-const BACKEND = "https://juegosbackend.onrender.com"; // Url RENDER del backend
-
 function cargarTopResta(nivel) {
   fetch(`${BACKEND}/api/scores/top?juego=resta-enteros&nivel=${nivel}`)
     .then((r) => r.json())
@@ -223,7 +234,7 @@ function cargarTopResta(nivel) {
       lista.forEach((p, i) => {
         ul.innerHTML += `<li>#${i + 1} ${p.nombre} (${p.unidad}) - ${
           p.puntaje
-        } pts / ${p.tiempo}s</li>`;
+        } pts / ${p.tiempo}s [${p.nivel}]</li>`;
       });
     })
     .catch((err) => console.error("Top 10 error:", err));
@@ -246,10 +257,14 @@ function guardarPuntajeResta(puntajeFinal, tiempoTotal, nivel) {
   })
     .then((r) => {
       if (r.ok) {
-        cargarTopResta(nivel); // Asegúrate de que esta función esté definida
+        cargarTopResta(nivel);
       } else {
         console.error("⚠️ Error al guardar el puntaje (datos inválidos)");
       }
     })
     .catch((err) => console.error("❌ Error al guardar puntaje:", err));
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarTopResta(dificultad);
+});
