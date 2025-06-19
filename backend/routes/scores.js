@@ -1,11 +1,47 @@
 const express = require("express");
 const router = express.Router();
-const Puntaje = require("../models/Puntaje"); // Esto está bien
+const Puntaje = require("../models/Puntaje");
 
 // POST: guardar puntaje
 router.post("/", async (req, res) => {
   try {
-    const nuevo = new Puntaje(req.body);
+    const { nombre, unidad, puntaje, tiempo, nivel, juego } = req.body;
+
+    // 🔒 Validaciones básicas contra trampas
+    if (typeof nombre !== "string" || nombre.trim() === "") {
+      return res.status(400).json({ error: "Nombre inválido" });
+    }
+
+    if (typeof unidad !== "string" || unidad.trim() === "") {
+      return res.status(400).json({ error: "Unidad inválida" });
+    }
+
+    if (typeof puntaje !== "number" || puntaje < 0 || puntaje > 10) {
+      return res.status(400).json({ error: "Puntaje fuera de rango (0-10)" });
+    }
+
+    if (typeof tiempo !== "number" || tiempo < 8 || tiempo > 600) {
+      return res.status(400).json({ error: "Tiempo fuera de rango" });
+    }
+
+    const nivelesPermitidos = ["facil", "medio", "dificil"];
+    if (!nivelesPermitidos.includes(nivel)) {
+      return res.status(400).json({ error: "Nivel inválido" });
+    }
+
+    if (juego !== "suma-enteros") {
+      return res.status(400).json({ error: "Juego inválido" });
+    }
+
+    const nuevo = new Puntaje({
+      nombre: nombre.trim(),
+      unidad: unidad.trim(),
+      puntaje,
+      tiempo,
+      nivel,
+      juego,
+    });
+
     await nuevo.save();
     res.status(201).json({ message: "Puntaje guardado correctamente" });
   } catch (err) {
@@ -15,7 +51,6 @@ router.post("/", async (req, res) => {
 });
 
 // GET: obtener top 10 por juego y nivel
-// GET: obtener top 10 por juego (opcional: nivel)
 router.get("/top", async (req, res) => {
   try {
     const { juego, nivel } = req.query;
