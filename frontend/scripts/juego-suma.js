@@ -223,19 +223,24 @@ function guardarPuntajeSuma(puntajeFinal, tiempoTotal, nivel) {
     nombre: prompt("Tu nombre:") || "Anónimo",
     unidad: prompt("Unidad Educativa:") || "Sin unidad",
     puntaje: puntajeFinal,
-    tiempo: tiempoTotal,
+    tiempo: Number(tiempoTotal), // Asegurarse de que sea número
     nivel,
     juego: "suma-enteros",
   };
+
   fetch(`${BACKEND}/api/scores`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(datos),
   })
     .then((r) => {
-      if (r.ok) cargarTopSuma(nivel);
+      if (r.ok) {
+        cargarTopSuma(nivel);
+      } else {
+        console.error("⚠️ Error al guardar el puntaje (datos inválidos)");
+      }
     })
-    .catch((err) => console.error("Guardar puntaje error:", err));
+    .catch((err) => console.error("❌ Error al guardar puntaje:", err));
 }
 
 document.addEventListener("DOMContentLoaded", () => {

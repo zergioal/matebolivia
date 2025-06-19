@@ -231,20 +231,25 @@ function cargarTopResta(nivel) {
 
 function guardarPuntajeResta(puntajeFinal, tiempoTotal, nivel) {
   const datos = {
-    nombre: prompt("Tu nombre:") || "Anónimo",
-    unidad: prompt("Unidad Educativa:") || "Sin unidad",
-    puntaje: puntajeFinal,
-    tiempo: tiempoTotal,
+    nombre: prompt("Tu nombre:")?.trim() || "Anónimo",
+    unidad: prompt("Unidad Educativa:")?.trim() || "Sin unidad",
+    puntaje: Number(puntajeFinal),
+    tiempo: Number(tiempoTotal),
     nivel,
     juego: "resta-enteros",
   };
+
   fetch(`${BACKEND}/api/scores`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(datos),
   })
     .then((r) => {
-      if (r.ok) cargarTopResta(nivel);
+      if (r.ok) {
+        cargarTopResta(nivel); // Asegúrate de que esta función esté definida
+      } else {
+        console.error("⚠️ Error al guardar el puntaje (datos inválidos)");
+      }
     })
-    .catch((err) => console.error("Guardar puntaje error:", err));
+    .catch((err) => console.error("❌ Error al guardar puntaje:", err));
 }
