@@ -17,6 +17,7 @@
       rel="stylesheet"
     />
   </head>
+
   <body>
     <!-- HEADER Y NAVBAR -->
     <header>
@@ -86,35 +87,83 @@
     </header>
 
     <main class="contenedor-arcade">
-      <h2 class="titulo-juego">
+      <h2 class="titulo-juego text-center">
         🎯 ¡Suma las fracciones hasta alcanzar el objetivo!
       </h2>
 
-      <div class="botones-dificultad">
-        <button id="btn-facil" class="btn-dificultad">Fácil</button>
-        <button id="btn-medio" class="btn-dificultad">Medio</button>
-        <button id="btn-dificil" class="btn-dificultad">Difícil</button>
+      <!-- Botón de INICIAR grande al estilo clásico -->
+      <div id="contenedor-boton-iniciar" class="text-center my-4">
+        <button id="btn-iniciar" class="btn btn-primary btn-lg">INICIAR</button>
       </div>
 
-      <div class="info-juego">
-        <div id="fraccion-objetivo" class="fraccion-objetivo">
-          Objetivo: \( \frac{1}{1} \)
+      <!-- Selector de niveles -->
+      <div
+        id="bloque-niveles"
+        class="botones-dificultad justify-content-center my-3"
+        style="display: none"
+      >
+        <button id="btn-facil" class="btn-dificultad btn btn-success mx-2">
+          Fácil
+        </button>
+        <button id="btn-medio" class="btn-dificultad btn btn-warning mx-2">
+          Medio
+        </button>
+        <button id="btn-dificil" class="btn-dificultad btn btn-danger mx-2">
+          Difícil
+        </button>
+      </div>
+
+      <!-- Tablero de juego (oculto hasta elegir nivel) -->
+      <div id="tablero-juego" style="display: none">
+        <div class="info-juego text-center mb-3">
+          <div id="fraccion-objetivo" class="fraccion-objetivo">
+            Objetivo: \( \frac{1}{1} \)
+          </div>
         </div>
-        <div id="puntaje" class="puntaje">Puntaje: 0</div>
-        <button id="reiniciar" class="btn-reiniciar">🔄 Reiniciar</button>
+
+        <div class="barra-inferior text-center mt-3">
+          <div id="puntaje" class="puntaje">Puntaje: 0 / 5</div>
+          <button
+            id="reiniciar"
+            class="btn-reiniciar btn btn-outline-secondary btn-sm"
+          >
+            🔄 Reiniciar
+          </button>
+        </div>
+
+        <div id="zona-juego" class="zona-juego">
+          <!-- Aquí aparecerán las fracciones flotantes -->
+        </div>
+
+        <div id="feedback-juego" class="feedback text-center mt-3"></div>
+        <div
+          id="mensaje-final"
+          class="mensaje-final text-center mt-3"
+          style="display: none"
+        ></div>
       </div>
-
-      <div id="zona-juego" class="zona-juego">
-        <!-- Aquí aparecerán las fracciones flotantes -->
-      </div>
-
-      <div id="feedback-juego" class="feedback"></div>
-
-      <div id="mensaje-final" class="mensaje-final" style="display: none"></div>
     </main>
 
-    <footer>
-      <p>
+    <section class="mt-5">
+      <h3 class="text-center">🏆 Top 10 por Nivel</h3>
+      <div class="row">
+        <div class="col-md-4">
+          <h5 class="text-center">Fácil</h5>
+          <ul id="lista-top-facil" class="list-group small"></ul>
+        </div>
+        <div class="col-md-4">
+          <h5 class="text-center">Medio</h5>
+          <ul id="lista-top-medio" class="list-group small"></ul>
+        </div>
+        <div class="col-md-4">
+          <h5 class="text-center">Difícil</h5>
+          <ul id="lista-top-dificil" class="list-group small"></ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-5">
+      <p class="text-center">
         © 2025 MateBolivia. Proyecto educativo desarrollado por el Prof. Sergio
         Alcocer.
       </p>

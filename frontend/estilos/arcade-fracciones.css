@@ -173,3 +173,23 @@ body {
     transform: scale(1);
   }
 }
+
+.barra-inferior {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.barra-inferior .puntaje {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.barra-inferior .btn-reiniciar {
+  font-size: 1rem;
+  padding: 0.4rem 0.8rem;
+}

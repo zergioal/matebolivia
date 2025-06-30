@@ -765,3 +765,323 @@ h4.titulo-seccion {
 .list-group-item:hover {
   background-color: #f8f9fa;
 }
+
+/* Contenedor general */
+.juego-drag-container {
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+/* Botón Iniciar grande */
+#contenedor-boton-iniciar button {
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  border-radius: 8px;
+}
+
+/* Botones de nivel */
+.botones-nivel .btn-nivel {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.botones-nivel .btn-nivel.seleccionado {
+  border: 2px solid #333;
+  font-weight: bold;
+}
+
+/* Instrucciones */
+.instrucciones {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+/* Cronómetro y puntaje */
+.cronometro,
+.puntaje {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+/* Feedback */
+.feedback {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+/* Tablero */
+.tablero {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  background-color: #fafafa;
+  padding: 1rem;
+  min-height: 300px;
+  gap: 1rem;
+}
+
+/* Columnas izquierda y derecha */
+.columna {
+  flex: 1 1 45%;
+  background-color: #fff;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  min-height: 250px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  overflow-y: auto;
+}
+
+/* Fichas y objetivos */
+.fraccion-card,
+.fraccion-target {
+  display: inline-block;
+  background-color: #f0f0f0;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  margin: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: grab;
+  text-align: center;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.fraccion-card:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.fraccion-target {
+  background-color: #fff;
+  border: 2px dashed #aaa;
+  cursor: pointer;
+}
+
+.fraccion-target.completo {
+  background-color: #c8e6c9;
+  border-color: #2e7d32;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+/* Dragging class */
+.fraccion-card.dragging {
+  opacity: 0.5;
+}
+
+/* Responsive para móvil */
+@media (max-width: 768px) {
+  .tablero {
+    flex-direction: column;
+  }
+
+  .columna {
+    min-height: 200px;
+  }
+}
+
+/* ======= Contenedor general ======= */
+.contenedor-arcade {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+/* ======= Botón INICIAR grande ======= */
+#contenedor-boton-iniciar button {
+  padding: 1rem 2rem;
+  font-size: 1.8rem;
+  border-radius: 10px;
+  background-color: #0069d9;
+  color: #fff;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+#contenedor-boton-iniciar button:hover {
+  background-color: #004da3;
+}
+
+/* ======= Selector de niveles ======= */
+.botones-dificultad {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn-dificultad {
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  transition: transform 0.2s;
+}
+
+.btn-dificultad:hover {
+  transform: scale(1.05);
+}
+
+.btn-dificultad.seleccionado {
+  border: 3px solid #333;
+  font-weight: bold;
+}
+
+/* ======= Información del juego ======= */
+.info-juego {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.fraccion-objetivo {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.puntaje {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #555;
+}
+
+.btn-reiniciar {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* ======= Zona de juego ======= */
+.zona-juego {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background-color: #f9f9f9;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ======= Fracciones flotantes ======= */
+.bloque-fraccion {
+  position: absolute;
+  background-color: #fff;
+  border: 2px solid #333;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 1.2rem;
+  user-select: none;
+}
+
+.bloque-fraccion:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.bloque-seleccionado {
+  border-color: #2e7d32;
+  background-color: #c8e6c9;
+  font-weight: bold;
+}
+
+/* ======= Animaciones ======= */
+.animar-entrada {
+  animation: entrada 0.3s ease-out;
+}
+
+.animar-salida {
+  animation: salida 0.3s forwards;
+}
+
+@keyframes entrada {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes salida {
+  to {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+/* ======= Feedback ======= */
+.feedback {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+/* ======= Mensaje final ======= */
+.mensaje-final {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #1b5e20;
+  background-color: #c8e6c9;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+/* ======= Top 10 ======= */
+section h3 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* ======= Responsive ======= */
+@media (max-width: 768px) {
+  .zona-juego {
+    height: 300px;
+  }
+
+  .bloque-fraccion {
+    font-size: 1rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .fraccion-objetivo {
+    font-size: 1.2rem;
+  }
+
+  .puntaje {
+    font-size: 1rem;
+  }
+}
+
+.fraccion-objetivo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  padding: 0.5rem 1rem;
+  border: 2px solid #333;
+  border-radius: 10px;
+  background-color: #f8f8f8;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+

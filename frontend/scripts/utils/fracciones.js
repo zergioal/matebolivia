@@ -1,36 +1,22 @@
-// utils/fracciones.js
-
-// Genera una fracción aleatoria simplificada con denominadores entre 2 y 10, limitada por dificultad
-export function generarFraccionAleatoria(dificultad = "facil") {
-  let den, num;
-  switch (dificultad) {
-    case "facil":
-      den = randomInt(2, 6);
-      num = randomInt(1, den - 1);
-      break;
-    case "medio":
-      den = randomInt(4, 8);
-      num = randomInt(1, den - 1);
-      break;
-    case "dificil":
-      den = randomInt(6, 12);
-      num = randomInt(1, den - 1);
-      break;
-    default:
-      den = randomInt(2, 10);
-      num = randomInt(1, den - 1);
+export function generarFraccionAleatoria(dificultad, denominadorFijo = null) {
+  let den;
+  if (dificultad === "facil") {
+    den = denominadorFijo || [4, 6, 8, 10, 12][Math.floor(Math.random() * 5)];
+    const num = Math.floor(Math.random() * (den - 1)) + 1;
+    return { num, den };
   }
-  return simplificarFraccion({ num, den });
-}
 
-// Genera una fracción objetivo sumando 2-3 fracciones válidas
-export function generarFraccionObjetivo(dificultad = "facil") {
-  const cantidad = dificultad === "dificil" ? 3 : 2;
-  const partes = Array.from({ length: cantidad }, () =>
-    generarFraccionAleatoria(dificultad)
-  );
-  const suma = partes.reduce((acc, curr) => sumarFracciones(acc, curr));
-  return { objetivo: suma, partes };
+  if (dificultad === "medio") {
+    // denominadores pequeños, fáciles de sumar
+    den = [2, 3, 4, 5, 6, 8, 10, 12][Math.floor(Math.random() * 8)];
+    const num = Math.floor(Math.random() * (den - 1)) + 1;
+    return { num, den };
+  }
+
+  // dificil
+  den = Math.floor(Math.random() * 11) + 5; // 5 a 15
+  const num = Math.floor(Math.random() * (den - 1)) + 1;
+  return { num, den };
 }
 
 export function sumarFracciones(a, b) {
@@ -39,22 +25,69 @@ export function sumarFracciones(a, b) {
   return simplificarFraccion({ num, den });
 }
 
-export function sonIguales(a, b) {
-  return a.num * b.den === b.num * a.den;
-}
-
-function simplificarFraccion(frac) {
-  const mcd = obtenerMCD(frac.num, frac.den);
+export function simplificarFraccion(frac) {
+  const mcd = (a, b) => (b === 0 ? a : mcd(b, a % b));
+  const divisor = Math.abs(mcd(frac.num, frac.den));
   return {
-    num: frac.num / mcd,
-    den: frac.den / mcd,
+    num: frac.num / divisor,
+    den: frac.den / divisor,
   };
 }
 
-function obtenerMCD(a, b) {
-  return b === 0 ? a : obtenerMCD(b, a % b);
+export function sonIguales(a, b) {
+  const f1 = simplificarFraccion(a);
+  const f2 = simplificarFraccion(b);
+  return f1.num === f2.num && f1.den === f2.den;
 }
 
-function randomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+export function generarFraccionObjetivo(dificultad) {
+  let partes = [];
+  let objetivo = { num: 0, den: 1 };
+
+  if (dificultad === "facil") {
+    // mismas denominadores homogéneas
+    const den = [4, 6, 8, 10, 12][Math.floor(Math.random() * 5)];
+    let totalNum = 0;
+    const cantidadPartes = 2 + Math.floor(Math.random() * 2); // 2 o 3
+
+    for (let i = 0; i < cantidadPartes; i++) {
+      const frac = generarFraccionAleatoria("facil", den);
+      partes.push(frac);
+      totalNum += frac.num;
+    }
+
+    // NO SIMPLIFICAR el objetivo aquí:
+    objetivo = { num: totalNum, den };
+
+    return { objetivo, partes };
+  }
+
+  if (dificultad === "medio") {
+    const cantidadPartes = 2 + Math.floor(Math.random() * 2); // 2 o 3
+    partes = [];
+    objetivo = { num: 0, den: 1 };
+
+    for (let i = 0; i < cantidadPartes; i++) {
+      const frac = generarFraccionAleatoria("medio");
+      partes.push(frac);
+      objetivo = sumarFracciones(objetivo, frac);
+    }
+
+    objetivo = simplificarFraccion(objetivo);
+    return { objetivo, partes };
+  }
+
+  // dificil
+  const cantidadPartes = 3 + Math.floor(Math.random() * 2); // 3 o 4
+  partes = [];
+  objetivo = { num: 0, den: 1 };
+
+  for (let i = 0; i < cantidadPartes; i++) {
+    const frac = generarFraccionAleatoria("dificil");
+    partes.push(frac);
+    objetivo = sumarFracciones(objetivo, frac);
+  }
+
+  objetivo = simplificarFraccion(objetivo);
+  return { objetivo, partes };
 }

@@ -1,11 +1,19 @@
-// juego-resta.js
-
-const FACIL_RANGO = 10;
-const MEDIO_RANGO = 20;
-const DIFICIL_RANGO = 25;
-const totalPreguntas = 10;
 import { BASE_API_URL } from "./config.js";
+import { guardarPuntaje } from "./api.js";
 
+// Sonidos
+const sonidos = {
+  acierto: new Audio("assets/sonidos/acierto.mp3"),
+  error: new Audio("assets/sonidos/error.mp3"),
+  final: new Audio("assets/sonidos/final.mp3"),
+};
+
+const usuarioId = localStorage.getItem("usuario_id");
+
+// 👇 USA TU UUID REAL DEL JUEGO "Resta de enteros" (ajústalo al valor correcto de tu base de datos)
+const ID_JUEGO_RESTA_ENTEROS = "cf8b8aa3-ce5b-4d52-989f-cfb0ead5df2b";
+
+const totalPreguntas = 10;
 const BACKEND = BASE_API_URL;
 
 let dificultad = "facil";
@@ -16,11 +24,12 @@ let puntaje = 0;
 let actual = 0;
 let preguntas = [];
 
-window.prepararJuego = function prepararJuego() {
+/* ========== INICIO JUEGO ========== */
+export function prepararJuego() {
   document.getElementById("contenedor-boton-iniciar").style.display = "none";
   document.getElementById("bloque-juego").style.display = "block";
   iniciarJuego();
-};
+}
 
 window.setDificultad = function setDificultad(nivel) {
   dificultad = nivel;
@@ -51,64 +60,53 @@ function iniciarJuego() {
     btn.classList.remove("seleccionado");
   });
   document.getElementById(`btn-${dificultad}`).classList.add("seleccionado");
-
-  cargarTopResta(dificultad);
 }
 
+/* ========== PREGUNTAS ========== */
 function formatoParentesis(n) {
   if (n < 0) return `(${n})`;
   if (Math.random() < 0.5) return `(+${n})`;
   return `${n}`;
 }
 
-function generarPregunta(nivel, usarRangoGrande) {
-  let min = -100,
-    max = 100,
-    cantidad = 2;
+function generarPregunta(nivel) {
+  let cantidad = 2;
+  let min = -12;
+  let max = 12;
 
   if (nivel === "facil") {
-    min = -FACIL_RANGO;
-    max = FACIL_RANGO;
     cantidad = 2;
+    min = -8;
+    max = 8;
   } else if (nivel === "medio") {
-    min = usarRangoGrande ? -100 : -MEDIO_RANGO;
-    max = usarRangoGrande ? 100 : MEDIO_RANGO;
-    cantidad = 3;
+    cantidad = 2;
+    min = -15;
+    max = 15;
   } else if (nivel === "dificil") {
-    min = usarRangoGrande ? -100 : -DIFICIL_RANGO;
-    max = usarRangoGrande ? 100 : DIFICIL_RANGO;
-    cantidad = Math.floor(Math.random() * 3) + 4;
+    cantidad = 3;
+    min = -12;
+    max = 12;
   }
 
+  // Generar los números aleatorios
   const numeros = Array.from(
     { length: cantidad },
     () => Math.floor(Math.random() * (max - min + 1)) + min
   );
 
-  let expr = "";
-  let correcta = 0;
-
-  if (nivel === "facil") {
-    expr = `\\(${numeros[0]} - ${formatoParentesis(numeros[1])}\\)`;
-    correcta = numeros[0] - numeros[1];
-  } else {
-    expr = `\\(${numeros[0]}`;
-    correcta = numeros[0];
-    for (let i = 1; i < numeros.length; i++) {
-      const operador = Math.random() < 0.5 ? "+" : "-";
-      expr +=
-        operador === "+"
-          ? ` + ${formatoParentesis(numeros[i])}`
-          : ` - ${formatoParentesis(numeros[i])}`;
-      correcta =
-        operador === "+" ? correcta + numeros[i] : correcta - numeros[i];
-    }
-    expr += "\\)";
+  // Construir la expresión en formato LaTeX
+  let expr = `\\(${numeros[0]}`;
+  let correcta = numeros[0];
+  for (let i = 1; i < numeros.length; i++) {
+    expr += ` - ${formatoParentesis(numeros[i])}`;
+    correcta -= numeros[i];
   }
+  expr += "\\)";
 
+  // Crear opciones con distractores
   const opciones = [correcta];
   while (opciones.length < 4) {
-    const distractor = correcta + Math.floor(Math.random() * 21) - 10;
+    const distractor = correcta + Math.floor(Math.random() * 11) - 5;
     if (!opciones.includes(distractor)) {
       opciones.push(distractor);
     }
@@ -121,6 +119,7 @@ function generarPregunta(nivel, usarRangoGrande) {
   };
 }
 
+/* ========== CRONÓMETRO ========== */
 function iniciarCronometro() {
   tiempoInicio = Date.now();
   actualizarCronometro();
@@ -144,6 +143,7 @@ function actualizarCronometro() {
   }
 }
 
+/* ========== MOSTRAR PREGUNTA ========== */
 function mostrarPregunta() {
   const p = preguntas[actual];
   const opcionesContainer = document.getElementById("opciones");
@@ -165,10 +165,8 @@ function mostrarPregunta() {
   iniciarCronometro();
 }
 
-window.verificarRespuesta = function verificarRespuesta(
-  seleccionada,
-  botonClickeado
-) {
+/* ========== VERIFICAR RESPUESTA ========== */
+export function verificarRespuesta(seleccionada, botonClickeado) {
   document.querySelectorAll(".opcion").forEach((btn) => (btn.disabled = true));
   detenerCronometro();
   const correcta = preguntas[actual].correcta;
@@ -179,10 +177,12 @@ window.verificarRespuesta = function verificarRespuesta(
     feedback.textContent = "¡Correcto!";
     feedback.style.color = "green";
     botonClickeado.classList.add("correcta");
+    sonidos.acierto.play();
   } else {
     feedback.textContent = `Incorrecto. Era ${correcta}`;
     feedback.style.color = "red";
     botonClickeado.classList.add("incorrecta");
+    sonidos.error.play();
 
     document.querySelectorAll(".opcion").forEach((btn) => {
       if (Number(btn.dataset.respuesta) === correcta) {
@@ -192,7 +192,7 @@ window.verificarRespuesta = function verificarRespuesta(
   }
 
   setTimeout(() => siguientePregunta(), 1500);
-};
+}
 
 function siguientePregunta() {
   actual++;
@@ -210,11 +210,13 @@ function siguientePregunta() {
     document.getElementById(
       "puntaje-final"
     ).textContent = `Tu puntaje: ${puntaje} / ${totalPreguntas}`;
+    sonidos.final.play();
     guardarPuntajeResta(puntaje, Number(tiempoFinal), dificultad);
   }
 }
 
-window.reiniciarJuego = function reiniciarJuego() {
+/* ========== REINICIAR JUEGO ========== */
+export function reiniciarJuego() {
   clearInterval(cronometroIntervalo);
   tiempoInicio = null;
   tiempoTotal = 0;
@@ -225,48 +227,86 @@ window.reiniciarJuego = function reiniciarJuego() {
   document.getElementById("bloque-juego").style.display = "none";
   document.getElementById("puntaje-final").textContent = "";
   document.getElementById("cronometro").textContent = "⏱️ Tiempo: 0.0 s";
-};
-
-function cargarTopResta(nivel) {
-  fetch(`${BACKEND}/api/scores/top?juego=resta-enteros&nivel=${nivel}`)
-    .then((r) => r.json())
-    .then((lista) => {
-      const ul = document.getElementById("lista-top-resta");
-      ul.innerHTML = "";
-      lista.forEach((p, i) => {
-        ul.innerHTML += `<li>#${i + 1} ${p.nombre} (${p.unidad}) - ${
-          p.puntaje
-        } pts / ${p.tiempo}s [${p.nivel}]</li>`;
-      });
-    })
-    .catch((err) => console.error("Top 10 error:", err));
 }
 
-function guardarPuntajeResta(puntajeFinal, tiempoTotal, nivel) {
-  const datos = {
-    nombre: prompt("Tu nombre:")?.trim() || "Anónimo",
-    unidad: prompt("Unidad Educativa:")?.trim() || "Sin unidad",
-    puntaje: Number(puntajeFinal),
-    tiempo: Number(tiempoTotal),
-    nivel,
-    juego: "resta-enteros",
-  };
+/* ========== CARGAR TOP PUNTAJES ========== */
+function cargarTopPorDificultad(claseId = null) {
+  ["facil", "medio", "dificil"].forEach((nivel) => {
+    let url = `${BACKEND}/scores/top?juego=${ID_JUEGO_RESTA_ENTEROS}&nivel=${nivel}`;
+    if (claseId) url += `&clase_id=${claseId}`;
 
-  fetch(`${BACKEND}/api/scores`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(datos),
-  })
-    .then((r) => {
-      if (r.ok) {
-        cargarTopResta(nivel);
-      } else {
-        console.error("⚠️ Error al guardar el puntaje (datos inválidos)");
-      }
-    })
-    .catch((err) => console.error("❌ Error al guardar puntaje:", err));
+    fetch(url)
+      .then((r) => r.json())
+      .then((lista) => {
+        const ul = document.getElementById(`lista-top-${nivel}`);
+        ul.innerHTML = "";
+
+        if (!Array.isArray(lista)) {
+          console.error("Respuesta inválida:", lista);
+          ul.innerHTML =
+            "<li class='list-group-item text-danger'>Error en el servidor.</li>";
+          return;
+        }
+
+        if (lista.length === 0) {
+          ul.innerHTML = "<li class='list-group-item'>Sin datos aún.</li>";
+          return;
+        }
+
+        lista.forEach((p, i) => {
+          ul.innerHTML += `
+            <li class="list-group-item">
+              <div class="d-flex align-items-center">
+                <span class="me-2 fw-bold text-secondary">#${i + 1}</span>
+                <img src="${
+                  p.avatar_url || "assets/avatar-default.png"
+                }" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                <div class="flex-grow-1">
+                  <div class="fw-bold">${p.usuario_nombre}</div>
+                  <div class="text-muted small">${
+                    p.clases ? p.clases.join(", ") : "Sin clase asignada"
+                  }</div>
+                </div>
+                <span class="badge bg-success ms-2">${p.puntaje} pts / ${
+            p.tiempo
+          }s</span>
+              </div>
+            </li>
+          `;
+        });
+      })
+      .catch((err) => {
+        console.error(`Error cargando top ${nivel}:`, err);
+        document.getElementById(`lista-top-${nivel}`).innerHTML =
+          "<li class='list-group-item text-danger'>Error al cargar.</li>";
+      });
+  });
+}
+
+/* ========== GUARDAR PUNTAJE ========== */
+async function guardarPuntajeResta(puntajeFinal, tiempoTotal, nivel) {
+  if (!usuarioId) {
+    alert("⚠️ Debes iniciar sesión para guardar tu puntaje.");
+    return;
+  }
+
+  try {
+    await guardarPuntaje(
+      usuarioId,
+      ID_JUEGO_RESTA_ENTEROS,
+      Number(puntajeFinal),
+      Number(tiempoTotal),
+      nivel
+    );
+
+    console.log("✅ Puntaje guardado correctamente");
+    cargarTopPorDificultad();
+  } catch (err) {
+    console.error("❌ Error al guardar puntaje:", err);
+    alert("❌ No se pudo guardar el puntaje. Intenta de nuevo más tarde.");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  cargarTopResta(dificultad);
+  cargarTopPorDificultad();
 });

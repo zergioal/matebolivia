@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multiplicación de Monomios | MateBolivia</title>
+    <link rel="stylesheet" href="estilos/style.css" />
+    <link rel="stylesheet" href="estilos/juego-monomios.css" />
+    <script
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-edu shadow-sm">
+        <div class="container">
+          <a
+            class="navbar-brand d-flex align-items-center gap-2"
+            href="index.html"
+          >
+            <img
+              src="assets/logo.png"
+              alt="Logo MateBolivia"
+              class="logo-navbar"
+            />
+            <span class="titulo-navbar">MateBolivia</span>
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- MAIN -->
+    <main class="contenedor-monomios">
+      <h2 class="titulo-juego text-center my-3">
+        🎯 Multiplicación de Monomios
+      </h2>
+
+      <p class="text-center mb-3">
+        Selecciona dos monomios para multiplicarlos. Ingresa el resultado en la
+        forma <strong>coeficiente x^exponente</strong>, por ejemplo:
+        <em>6x^3</em>.
+      </p>
+
+      <!-- BOTONES DE NIVEL -->
+      <div class="text-center my-3">
+        <button
+          class="btn-nivel btn btn-outline-primary mx-1"
+          data-nivel="facil"
+        >
+          Fácil
+        </button>
+        <button
+          class="btn-nivel btn btn-outline-primary mx-1"
+          data-nivel="medio"
+        >
+          Medio
+        </button>
+        <button
+          class="btn-nivel btn btn-outline-primary mx-1"
+          data-nivel="dificil"
+        >
+          Difícil
+        </button>
+      </div>
+
+      <!-- CRONÓMETRO Y PUNTAJE -->
+      <div class="text-center mb-3">
+        <div id="cronometro" class="cronometro">⏱️ 0.0 s</div>
+        <div id="puntaje" class="puntaje">Puntaje: 0/5</div>
+      </div>
+
+      <!-- ZONA DE MONOMIOS -->
+      <section id="zona-monomios" class="zona-monomios container mb-3">
+        <!-- Monomios generados aparecerán aquí -->
+      </section>
+
+      <!-- SELECCIONADOS -->
+      <div id="seleccionados" class="text-center mb-3">
+        Seleccionados: (elige 2)
+      </div>
+
+      <!-- INPUT Y BOTONES -->
+      <div class="text-center mb-4">
+        <input
+          type="text"
+          id="input-respuesta"
+          class="form-control d-inline-block mx-2"
+          style="width: 200px"
+          placeholder="Ej: 6x^3"
+        />
+        <button id="btn-verificar" class="btn btn-success mx-1">
+          ✅ Verificar
+        </button>
+        <button id="btn-reiniciar" class="btn btn-secondary mx-1">
+          🔄 Reiniciar
+        </button>
+      </div>
+
+      <!-- FEEDBACK -->
+      <div id="feedback-juego" class="feedback text-center"></div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="text-center mt-5 py-3 bg-light">
+      <p class="mb-0">
+        © 2025 MateBolivia. Proyecto educativo desarrollado por el Prof. Sergio
+        Alcocer.
+      </p>
+    </footer>
+
+    <script src="scripts/juego-monomios.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

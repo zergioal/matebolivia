@@ -1,5 +1,11 @@
 import { BASE_API_URL } from "./config.js";
 import { guardarPuntaje } from "./api.js";
+// Sonidos
+const sonidos = {
+  acierto: new Audio("assets/sonidos/acierto.mp3"),
+  error: new Audio("assets/sonidos/error.mp3"),
+  final: new Audio("assets/sonidos/final.mp3"),
+};
 
 const usuarioId = localStorage.getItem("usuario_id");
 // 👇 USA TU UUID REAL DEL JUEGO "Suma de enteros" de la tabla juegos
@@ -173,10 +179,12 @@ export function verificarRespuesta(seleccionada, botonClickeado) {
     feedback.textContent = "¡Correcto!";
     feedback.style.color = "green";
     botonClickeado.classList.add("correcta");
+    sonidos.acierto.play();
   } else {
     feedback.textContent = `Incorrecto. Era ${correcta}`;
     feedback.style.color = "red";
     botonClickeado.classList.add("incorrecta");
+    sonidos.error.play();
 
     document.querySelectorAll(".opcion").forEach((btn) => {
       if (Number(btn.dataset.respuesta) === correcta) {
@@ -204,6 +212,7 @@ function siguientePregunta() {
     document.getElementById(
       "puntaje-final"
     ).textContent = `Tu puntaje: ${puntaje} / ${totalPreguntas}`;
+    sonidos.final.play();
     guardarPuntajeSuma(puntaje, Number(tiempoFinal), dificultad);
   }
 }

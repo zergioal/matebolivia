@@ -6,6 +6,7 @@
     <title>Fracciones Equivalentes - Arrastra y Suelta | MateBolivia</title>
     <link rel="stylesheet" href="estilos/style.css" />
     <link rel="stylesheet" href="estilos/fracciones-drag.css" />
+
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script
       id="MathJax-script"
@@ -17,6 +18,7 @@
       rel="stylesheet"
     />
   </head>
+
   <body>
     <!-- HEADER Y NAVBAR -->
     <header>
@@ -48,7 +50,6 @@
             />
             <span class="titulo-navbar">MateBolivia</span>
           </a>
-
           <button
             class="navbar-toggler"
             type="button"
@@ -57,7 +58,6 @@
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-
           <div class="collapse navbar-collapse" id="navbarContenido">
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
@@ -85,57 +85,87 @@
       </nav>
     </header>
 
-    <main class="juego-drag-container">
-      <h2 class="titulo-juego">Arrastra las fracciones equivalentes</h2>
-      <div class="botones-nivel">
-        <button id="btn-facil" class="btn-nivel">Fácil</button>
-        <button id="btn-medio" class="btn-nivel">Medio</button>
-        <button id="btn-dificil" class="btn-nivel">Difícil</button>
+    <main class="juego-drag-container container my-4">
+      <h2 class="text-center mb-3">Fracciones Equivalentes</h2>
+
+      <!-- BOTÓN INICIAR -->
+      <div id="contenedor-boton-iniciar" class="text-center mb-4">
+        <button id="btn-iniciar" class="btn btn-lg btn-primary">
+          🚀 INICIAR JUEGO
+        </button>
       </div>
-      <p class="instrucciones">
-        Arrastra las fracciones del lado izquierdo hacia su equivalente correcto
-        del lado derecho.
+
+      <!-- SELECTOR DE NIVELES -->
+      <div
+        id="bloque-niveles"
+        class="botones-nivel d-flex justify-content-center mb-3"
+        style="display: none"
+      >
+        <button id="btn-facil" class="btn-nivel btn btn-success mx-1">
+          Fácil
+        </button>
+        <button id="btn-medio" class="btn-nivel btn btn-warning mx-1">
+          Medio
+        </button>
+        <button id="btn-dificil" class="btn-nivel btn btn-danger mx-1">
+          Difícil
+        </button>
+      </div>
+
+      <!-- INSTRUCCIONES -->
+      <p
+        id="instrucciones"
+        class="text-center instrucciones"
+        style="display: none"
+      >
+        ✅ Toca primero la fracción izquierda y luego su pareja correcta a la
+        derecha.
       </p>
 
-      <div class="tablero">
-        <div class="columna izquierda" id="fracciones-origen">
-          <!-- Fracciones a arrastrar -->
-          <div class="fraccion-card" draggable="true" data-equivalente="1/2">
-            \( \frac{2}{4} \)
-          </div>
-          <div class="fraccion-card" draggable="true" data-equivalente="2/3">
-            \( \frac{4}{6} \)
-          </div>
-          <div class="fraccion-card" draggable="true" data-equivalente="3/4">
-            \( \frac{6}{8} \)
-          </div>
+      <!-- TABLERO -->
+      <div
+        class="tablero d-flex justify-content-between flex-wrap flex-md-nowrap mb-4"
+        style="display: none"
+      >
+        <div class="columna izquierda flex-fill me-2" id="fracciones-origen">
+          <!-- Fichas generadas con JS -->
         </div>
-
-        <div class="columna derecha" id="fracciones-destino">
-          <!-- Destinos -->
-          <div class="fraccion-target" data-objetivo="3/4">
-            \( \frac{3}{4} \)
-          </div>
-          <div class="fraccion-target" data-objetivo="1/2">
-            \( \frac{1}{2} \)
-          </div>
-          <div class="fraccion-target" data-objetivo="2/3">
-            \( \frac{2}{3} \)
-          </div>
+        <div class="columna derecha flex-fill ms-2" id="fracciones-destino">
+          <!-- Objetivos generados con JS -->
         </div>
       </div>
 
-      <div id="feedback-juego" class="feedback"></div>
+      <!-- FEEDBACK -->
+      <div id="feedback-juego" class="feedback text-center mt-3"></div>
     </main>
 
-    <footer>
+    <!-- SECCIÓN TOP 10 -->
+    <section class="container mt-5">
+      <h3 class="text-center">🏆 Top 10 por Nivel</h3>
+      <div class="row">
+        <div class="col-md-4">
+          <h5 class="text-center">Fácil</h5>
+          <ul id="lista-top-facil" class="list-group small"></ul>
+        </div>
+        <div class="col-md-4">
+          <h5 class="text-center">Medio</h5>
+          <ul id="lista-top-medio" class="list-group small"></ul>
+        </div>
+        <div class="col-md-4">
+          <h5 class="text-center">Difícil</h5>
+          <ul id="lista-top-dificil" class="list-group small"></ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="text-center py-4">
       <p>
         © 2025 MateBolivia. Proyecto educativo desarrollado por el Prof. Sergio
         Alcocer.
       </p>
     </footer>
 
-    <script src="scripts/fracciones-drag.js"></script>
+    <script type="module" src="scripts/fracciones-drag.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="scripts/navbar.js"></script>
   </body>

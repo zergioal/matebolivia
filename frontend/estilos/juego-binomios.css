@@ -1,0 +1,56 @@
+/* juego-binomios.css */
+
+.contenedor-binomios {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.titulo-juego {
+  font-weight: bold;
+  color: #6a1b9a;
+}
+
+.problema-bin-container {
+  background-color: #f3e5f5;
+  padding: 20px;
+  border-radius: 10px;
+  border: 2px solid #ab47bc;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.problema-bin {
+  color: #4a148c;
+}
+
+.feedback {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.puntaje,
+.cronometro {
+  font-size: 1.2rem;
+  margin: 5px;
+  font-weight: bold;
+}
+
+input#input-respuesta-bin {
+  max-width: 250px;
+  text-align: center;
+  border: 2px solid #ab47bc;
+  border-radius: 8px;
+}
+
+input#input-respuesta-bin:focus {
+  outline: none;
+  box-shadow: 0 0 5px #8e24aa;
+}
+
+.btn-nivel.seleccionado {
+  background-color: #8e24aa;
+  color: white;
+  border-color: #6a1b9a;
+}

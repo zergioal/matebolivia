@@ -1,10 +1,19 @@
-// juego-multiplicacion.js (actualizado con operaciones combinadas en nivel difícil)
+import { BASE_API_URL } from "./config.js";
+import { guardarPuntaje } from "./api.js";
+// Sonidos
+const sonidos = {
+  acierto: new Audio("assets/sonidos/acierto.mp3"),
+  error: new Audio("assets/sonidos/error.mp3"),
+  final: new Audio("assets/sonidos/final.mp3"),
+};
 
-const FACIL_RANGO = 10;
-const DIFICIL_RANGO = 6;
+const usuarioId = localStorage.getItem("usuario_id");
 
-const NUMEROS_FACILES = [2, 3, 4, 5, 10, 11, 12, 15, 20, 25];
-const SIMBOLOS = ["×", "·", "*", "()"];
+// 👇 USA TU UUID REAL DEL JUEGO "Multiplicación de enteros" de la tabla juegos
+const ID_JUEGO_MULTIPLICACION_ENTEROS = "8102a676-804a-457d-87b4-3d1b38d7387e";
+
+const totalPreguntas = 10;
+const BACKEND = BASE_API_URL;
 
 let dificultad = "facil";
 let tiempoInicio = null;
@@ -13,16 +22,21 @@ let tiempoTotal = 0;
 let puntaje = 0;
 let actual = 0;
 let preguntas = [];
-const totalPreguntas = 10;
 
-window.prepararJuego = function prepararJuego() {
+const SIMBOLOS = ["×", "·", "*", "()"];
+
+/* ========== INICIO JUEGO ========== */
+export function prepararJuego() {
   document.getElementById("contenedor-boton-iniciar").style.display = "none";
   document.getElementById("bloque-juego").style.display = "block";
   iniciarJuego();
-};
+}
 
 window.setDificultad = function setDificultad(nivel) {
-  dificultad = nivel;
+  if (nivel === "facil") dificultad = "facil";
+  else if (nivel === "medio") dificultad = "medio";
+  else if (nivel === "dificil") dificultad = "dificil";
+
   document
     .querySelectorAll(".btn-nivel")
     .forEach((btn) => btn.classList.remove("seleccionado"));
@@ -51,6 +65,7 @@ function iniciarJuego() {
   document.getElementById(`btn-${dificultad}`).classList.add("seleccionado");
 }
 
+/* ========== PREGUNTAS ========== */
 function formatoParentesis(n) {
   if (n < 0) return `(${n})`;
   if (Math.random() < 0.5) return `(+${n})`;
@@ -58,92 +73,62 @@ function formatoParentesis(n) {
 }
 
 function generarPregunta(nivel) {
-  let factores = [],
-    expr = "\\(",
-    correcta = 1;
-  const simbolo = SIMBOLOS[Math.floor(Math.random() * SIMBOLOS.length)];
+  let cantidad = 2;
+  let min = -12;
+  let max = 12;
 
   if (nivel === "facil") {
-    factores = Array.from(
-      { length: 2 },
-      () => Math.floor(Math.random() * 21) - 10
-    );
-    correcta = factores.reduce((a, b) => a * b, 1);
-
-    if (simbolo === "()") {
-      expr += factores.map((n) => `(${n})`).join("");
-    } else {
-      expr += formatoParentesis(factores[0]);
-      for (let i = 1; i < factores.length; i++) {
-        expr += ` ${simbolo} ${formatoParentesis(factores[i])}`;
-      }
-    }
-    expr += "\\)";
+    cantidad = 2;
+    min = -5;
+    max = 5;
+  } else if (nivel === "medio") {
+    cantidad = 2;
+    min = -12;
+    max = 12;
+  } else if (nivel === "dificil") {
+    cantidad = 3;
+    min = -7;
+    max = 7;
   }
 
-  if (nivel === "medio") {
-    const cantidad = Math.floor(Math.random() * 2) + 3; // 3 o 4 factores
-    for (let i = 0; i < cantidad; i++) {
-      let num =
-        Math.floor(Math.random() * (2 * DIFICIL_RANGO + 1)) - DIFICIL_RANGO;
-      if (num === 0) num = 1;
-      factores.push(num);
-    }
+  const simbolo = SIMBOLOS[Math.floor(Math.random() * SIMBOLOS.length)];
+  const factores = Array.from(
+    { length: cantidad },
+    () => Math.floor(Math.random() * (max - min + 1)) + min || 1
+  );
 
-    correcta = factores.reduce((a, b) => a * b, 1);
-
-    if (simbolo === "()") {
-      expr += factores.map((n) => `(${n})`).join("");
-    } else {
-      expr += formatoParentesis(factores[0]);
-      for (let i = 1; i < factores.length; i++) {
-        expr += ` ${simbolo} ${formatoParentesis(factores[i])}`;
-      }
+  // Evitar ceros en factores (multiplicación con cero trivializa el problema)
+  for (let i = 0; i < factores.length; i++) {
+    if (factores[i] === 0) {
+      factores[i] = Math.random() < 0.5 ? 1 : -1;
     }
-    expr += "\\)";
   }
 
-  if (nivel === "dificil") {
-    const tipo = Math.floor(Math.random() * 3); // 0: entero ± multiplicación, 1: multiplicación ± entero, 2: multiplicación ± multiplicación
-    const op = Math.random() < 0.5 ? "+" : "-";
+  let expr = "\\(";
+  let correcta = factores[0];
 
-    const mult = (n) => {
-      const a = Math.floor(Math.random() * 11) - 5 || 1;
-      const b = Math.floor(Math.random() * 11) - 5 || 2;
-      const resultado = a * b;
-      let parte =
-        simbolo === "()"
-          ? `(${a})(${b})`
-          : `${formatoParentesis(a)} ${simbolo} ${formatoParentesis(b)}`;
-      return { texto: parte, valor: resultado };
-    };
-
-    let texto = "",
-      resultado = 0;
-    if (tipo === 0) {
-      const entero = Math.floor(Math.random() * 21) - 10;
-      const m = mult();
-      resultado = op === "+" ? entero + m.valor : entero - m.valor;
-      texto = `${entero} ${op} ${m.texto}`;
-    } else if (tipo === 1) {
-      const entero = Math.floor(Math.random() * 21) - 10;
-      const m = mult();
-      resultado = op === "+" ? m.valor + entero : m.valor - entero;
-      texto = `${m.texto} ${op} ${Math.abs(entero)}`;
-    } else {
-      const m1 = mult();
-      const m2 = mult();
-      resultado = op === "+" ? m1.valor + m2.valor : m1.valor - m2.valor;
-      texto = `${m1.texto} ${op} ${m2.texto}`;
+  if (simbolo === "()") {
+    // Forma con paréntesis pegados: (a)(b)...(c)
+    expr += factores.map((n) => `(${n})`).join("");
+  } else {
+    // Forma con símbolo elegido
+    expr += formatoParentesis(factores[0]);
+    for (let i = 1; i < factores.length; i++) {
+      expr += ` ${simbolo} ${formatoParentesis(factores[i])}`;
     }
-
-    correcta = resultado;
-    expr += `${texto}\\)`;
   }
 
+  expr += "\\)";
+
+  // Calcular resultado
+  for (let i = 1; i < factores.length; i++) {
+    correcta *= factores[i];
+  }
+
+  // Opciones con distractores
   const opciones = [correcta];
   while (opciones.length < 4) {
-    const distractor = correcta + Math.floor(Math.random() * 21) - 10;
+    const distractor = correcta + Math.floor(Math.random() * 11) - 5;
     if (!opciones.includes(distractor)) {
       opciones.push(distractor);
     }
@@ -156,6 +141,7 @@ function generarPregunta(nivel) {
   };
 }
 
+/* ========== CRONÓMETRO ========== */
 function iniciarCronometro() {
   tiempoInicio = Date.now();
   actualizarCronometro();
@@ -179,22 +165,30 @@ function actualizarCronometro() {
   }
 }
 
+/* ========== MOSTRAR PREGUNTA ========== */
 function mostrarPregunta() {
   const p = preguntas[actual];
+  const opcionesContainer = document.getElementById("opciones");
   document.getElementById("pregunta").innerHTML = p.enunciado;
-  const opcionesHTML = p.opciones
-    .map(
-      (op) =>
-        `<button class="opcion" onclick="verificarRespuesta(${op})">\\(${op}\\)</button>`
-    )
-    .join("");
-  document.getElementById("opciones").innerHTML = opcionesHTML;
+
+  opcionesContainer.innerHTML = "";
   document.getElementById("feedback").textContent = "";
+
+  p.opciones.forEach((op) => {
+    const btn = document.createElement("button");
+    btn.classList.add("opcion");
+    btn.dataset.respuesta = op;
+    btn.innerHTML = `\\(${op}\\)`;
+    btn.addEventListener("click", () => verificarRespuesta(Number(op), btn));
+    opcionesContainer.appendChild(btn);
+  });
+
   MathJax.typesetPromise();
   iniciarCronometro();
 }
 
-window.verificarRespuesta = function verificarRespuesta(seleccionada) {
+/* ========== VERIFICAR RESPUESTA ========== */
+export function verificarRespuesta(seleccionada, botonClickeado) {
   document.querySelectorAll(".opcion").forEach((btn) => (btn.disabled = true));
   detenerCronometro();
   const correcta = preguntas[actual].correcta;
@@ -204,19 +198,23 @@ window.verificarRespuesta = function verificarRespuesta(seleccionada) {
     puntaje++;
     feedback.textContent = "¡Correcto!";
     feedback.style.color = "green";
-    document
-      .querySelector(`.opcion[onclick*="${seleccionada}"]`)
-      .classList.add("correcta");
+    botonClickeado.classList.add("correcta");
+    sonidos.acierto.play();
   } else {
     feedback.textContent = `Incorrecto. Era ${correcta}`;
     feedback.style.color = "red";
-    document
-      .querySelector(`.opcion[onclick*="${seleccionada}"]`)
-      .classList.add("incorrecta");
+    botonClickeado.classList.add("incorrecta");
+    sonidos.error.play();
+
+    document.querySelectorAll(".opcion").forEach((btn) => {
+      if (Number(btn.dataset.respuesta) === correcta) {
+        btn.classList.add("correcta");
+      }
+    });
   }
 
   setTimeout(() => siguientePregunta(), 1500);
-};
+}
 
 function siguientePregunta() {
   actual++;
@@ -227,16 +225,20 @@ function siguientePregunta() {
     document.getElementById("opciones").innerHTML = "";
     document.getElementById("feedback").textContent = "";
     detenerCronometro();
-    document.getElementById("cronometro").textContent = `⏱️ Tiempo total: ${(
-      tiempoTotal / 1000
-    ).toFixed(1)} s`;
+    const tiempoFinal = (tiempoTotal / 1000).toFixed(1);
+    document.getElementById(
+      "cronometro"
+    ).textContent = `⏱️ Tiempo total: ${tiempoFinal} s`;
     document.getElementById(
       "puntaje-final"
     ).textContent = `Tu puntaje: ${puntaje} / ${totalPreguntas}`;
+    sonidos.final.play();
+    guardarPuntajeMultiplicacion(puntaje, Number(tiempoFinal), dificultad);
   }
 }
 
-window.reiniciarJuego = function reiniciarJuego() {
+/* ========== REINICIAR JUEGO ========== */
+export function reiniciarJuego() {
   clearInterval(cronometroIntervalo);
   tiempoInicio = null;
   tiempoTotal = 0;
@@ -247,4 +249,93 @@ window.reiniciarJuego = function reiniciarJuego() {
   document.getElementById("bloque-juego").style.display = "none";
   document.getElementById("puntaje-final").textContent = "";
   document.getElementById("cronometro").textContent = "⏱️ Tiempo: 0.0 s";
-};
+}
+
+/* ========== CARGAR TOP PUNTAJES ========== */
+function cargarTopPorDificultad(claseId = null) {
+  ["facil", "medio", "dificil"].forEach((nivel) => {
+    let url = `${BACKEND}/scores/top?juego=${ID_JUEGO_MULTIPLICACION_ENTEROS}&nivel=${nivel}`;
+
+    if (claseId) {
+      url += `&clase_id=${claseId}`;
+    }
+
+    fetch(url)
+      .then((r) => r.json())
+      .then((lista) => {
+        const ul = document.getElementById(`lista-top-${nivel}`);
+        ul.innerHTML = "";
+
+        if (!Array.isArray(lista)) {
+          console.error("Respuesta inválida:", lista);
+          ul.innerHTML =
+            "<li class='list-group-item text-danger'>Error en el servidor.</li>";
+          return;
+        }
+
+        if (lista.length === 0) {
+          ul.innerHTML = "<li class='list-group-item'>Sin datos aún.</li>";
+          return;
+        }
+
+        lista.forEach((p, i) => {
+          ul.innerHTML += `
+            <li class="list-group-item">
+              <div class="d-flex align-items-center">
+                <span class="me-2 fw-bold text-secondary">#${i + 1}</span>
+                <img src="${
+                  p.avatar_url || "assets/avatar-default.png"
+                }" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                <div class="flex-grow-1">
+                  <div class="fw-bold">${p.usuario_nombre}</div>
+                  <div class="text-muted small">${
+                    p.clases ? p.clases.join(", ") : "Sin clase asignada"
+                  }</div>
+                </div>
+                <span class="badge bg-success ms-2">${p.puntaje} pts / ${
+            p.tiempo
+          }s</span>
+              </div>
+            </li>
+          `;
+        });
+      })
+      .catch((err) => {
+        console.error(`Error cargando top ${nivel}:`, err);
+        document.getElementById(`lista-top-${nivel}`).innerHTML =
+          "<li class='list-group-item text-danger'>Error al cargar.</li>";
+      });
+  });
+}
+
+/* ========== GUARDAR PUNTAJE ========== */
+async function guardarPuntajeMultiplicacion(puntajeFinal, tiempoTotal, nivel) {
+  if (!usuarioId) {
+    alert("⚠️ Debes iniciar sesión para guardar tu puntaje.");
+    return;
+  }
+
+  try {
+    await guardarPuntaje(
+      usuarioId,
+      ID_JUEGO_MULTIPLICACION_ENTEROS,
+      Number(puntajeFinal),
+      Number(tiempoTotal),
+      nivel
+    );
+
+    console.log("✅ Puntaje guardado correctamente");
+    cargarTopPorDificultad();
+  } catch (err) {
+    console.error("❌ Error al guardar puntaje:", err);
+    alert("❌ No se pudo guardar el puntaje. Intenta de nuevo más tarde.");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  cargarTopPorDificultad();
+});
+
+window.prepararJuego = prepararJuego;
+window.verificarRespuesta = verificarRespuesta;
+window.reiniciarJuego = reiniciarJuego;

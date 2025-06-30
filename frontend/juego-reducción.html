@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Juego: Resta de Enteros | MateBolivia</title>
+    <title>Juego: Reducción de Términos Semejantes | MateBolivia</title>
     <link rel="stylesheet" href="estilos/style.css" />
-    <link rel="stylesheet" href="estilos/juego-suma.css" />
-    <script type="module" src="scripts/juego-resta.js" defer></script>
+    <link rel="stylesheet" href="estilos/juego-reduccion.css" />
     <script
-      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+      id="MathJax-script"
       async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
     ></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -84,67 +84,52 @@
       </nav>
     </header>
 
-    <main class="juego-container">
-      <h2>Resta de enteros</h2>
+    <main class="juego-reduccion-container container my-4">
+      <h2 class="text-center mb-3">✏️ Reducción de Términos Semejantes</h2>
 
-      <!-- Botón visible al inicio -->
-      <div
-        id="contenedor-boton-iniciar"
-        style="display: flex; justify-content: center; margin-bottom: 20px"
-      >
-        <button id="btn-iniciar" class="reiniciar" onclick="prepararJuego()">
-          INICIAR
+      <div class="text-center mb-3">
+        <button id="btn-iniciar" class="btn btn-primary">INICIAR</button>
+      </div>
+
+      <div class="niveles text-center mb-3">
+        <button class="btn-nivel btn btn-outline-secondary" id="btn-facil">
+          Fácil
+        </button>
+        <button class="btn-nivel btn btn-outline-secondary" id="btn-medio">
+          Medio
+        </button>
+        <button class="btn-nivel btn btn-outline-secondary" id="btn-dificil">
+          Difícil
         </button>
       </div>
 
-      <!-- Selector de niveles -->
-      <div class="niveles">
-        <button
-          class="btn-nivel"
-          id="btn-facil"
-          onclick="setDificultad('facil')"
-        >
-          Nivel Fácil
-        </button>
-        <button
-          class="btn-nivel"
-          id="btn-medio"
-          onclick="setDificultad('medio')"
-        >
-          Nivel Medio
-        </button>
-        <button
-          class="btn-nivel"
-          id="btn-dificil"
-          onclick="setDificultad('dificil')"
-        >
-          Nivel Difícil
-        </button>
+      <div id="objetivo" class="objetivo text-center fw-bold mb-3">
+        🎯 Objetivo:
+      </div>
+      <div id="cronometro" class="cronometro text-center mb-3">
+        ⏱️ Tiempo: 0.0s
       </div>
 
-      <!-- Bloque del juego oculto hasta iniciar -->
-      <div id="bloque-juego" style="display: none">
-        <div id="cronometro" class="cronometro">⏱️ Tiempo: 0.0 s</div>
-        <div class="pregunta" id="pregunta"></div>
-        <div class="opciones" id="opciones"></div>
-        <div class="feedback" id="feedback"></div>
-        <div class="puntaje-final" id="puntaje-final"></div>
-        <button class="reiniciar" onclick="reiniciarJuego()">Reiniciar</button>
+      <div id="terminos-origen" class="tablero origen mb-4"></div>
+
+      <div class="tableros-destino row">
+        <div class="col-md-6 mb-3">
+          <h5 class="text-center">Contenedor X</h5>
+          <div id="contenedor-x" class="tablero destino"></div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <h5 class="text-center">Contenedor Y</h5>
+          <div id="contenedor-y" class="tablero destino"></div>
+        </div>
       </div>
+
+      <div class="text-center mb-3">
+        <button id="btn-verificar" class="btn btn-success">Verificar</button>
+      </div>
+      <div id="feedback-juego" class="feedback text-center fw-bold"></div>
     </main>
 
-    <div class="container my-4">
-      <h5>Video explicativo</h5>
-      <div class="ratio ratio-16x9">
-        <iframe
-          src="https://www.youtube.com/embed/46GnWFFSXr4?si=nfNF6UlOp8FHcZMw"
-          title="Video explicativo"
-          allowfullscreen
-        ></iframe>
-      </div>
-    </div>
-
-    <section class="mt-5">
+    <section class="mt-5 container">
       <h3 class="text-center">🏆 Top 10 por Nivel</h3>
       <div class="row">
         <div class="col-md-4">
@@ -162,8 +147,8 @@
       </div>
     </section>
 
-    <footer>
-      <p>
+    <footer class="mt-4">
+      <p class="text-center">
         © 2025 MateBolivia. Proyecto educativo desarrollado por el Prof. Sergio
         Alcocer.
       </p>
@@ -171,16 +156,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="scripts/navbar.js"></script>
-    <script type="module">
-      import {
-        prepararJuego,
-        verificarRespuesta,
-        reiniciarJuego,
-      } from "./scripts/juego-resta.js";
-
-      window.prepararJuego = prepararJuego;
-      window.verificarRespuesta = verificarRespuesta;
-      window.reiniciarJuego = reiniciarJuego;
-    </script>
+    <script type="module" src="scripts/juego-reduccion.js"></script>
   </body>
 </html>
