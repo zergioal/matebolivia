@@ -75,18 +75,14 @@
               <li class="nav-item">
                 <a class="nav-link" href="acerca.html">Acerca</a>
               </li>
-              <li class="nav-item">
-                <a class="btn btn-outline-light ms-2" href="login.html"
-                  >Login / Registrarse</a
-                >
-              </li>
+              <li class="nav-item" id="navbar-user-area"></li>
             </ul>
           </div>
         </div>
       </nav>
     </header>
 
-    <main class="juegos-matematica">
+    <!-- <main class="juegos-matematica">
       <section class="juegos-grid">
         <h2>Juegos de Matemática</h2>
         <div class="grid-juegos">
@@ -146,6 +142,122 @@
           <li>Estudiante 10 – 780 pts</li>
         </ol>
       </aside>
+    </main> -->
+    <main class="container py-5">
+      <div class="row">
+        <!-- SECCIÓN JUEGOS -->
+        <section class="col-lg-8 mb-4">
+          <h2 class="mb-4 text-center fw-bold text-primary">
+            Juegos de Matemática
+          </h2>
+          <div class="row g-3">
+            <a href="juego-suma.html" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">Suma de enteros</h5>
+                </div>
+              </div>
+            </a>
+            <a href="juego-resta.html" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">Resta de enteros</h5>
+                </div>
+              </div>
+            </a>
+
+            <a href="juego-multiplicacion.html" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">Multiplicación de enteros</h5>
+                </div>
+              </div>
+            </a>
+
+            <a href="juego-division.html" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">División de enteros</h5>
+                </div>
+              </div>
+            </a>
+
+            <a href="juego_fracciones_drag.html" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">Fracciones equivalentes</h5>
+                </div>
+              </div>
+            </a>
+
+            <a href="juego-fraccion-arcade.html" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">Operaciones con fracciones</h5>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">Potencias</h5>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">Operaciones algebraicas</h5>
+                </div>
+              </div>
+            </a>
+
+            <a href="juego-trig.html" class="col-6 col-md-4">
+              <div class="card h-100 shadow border-0 juego-card">
+                <div
+                  class="card-body d-flex flex-column justify-content-center text-center"
+                >
+                  <h5 class="card-title">Resolución de triángulos</h5>
+                </div>
+              </div>
+            </a>
+            <!-- ... repetir para los demás juegos -->
+          </div>
+        </section>
+
+        <!-- SECCIÓN RANKING -->
+        <aside class="col-lg-4">
+          <div class="card shadow border-0">
+            <div class="card-header bg-success text-white text-center fw-bold">
+              🏆 Top 10 Estudiantes Global
+            </div>
+            <ul
+              class="list-group list-group-flush ranking-list"
+              id="ranking-global"
+            >
+              <li class="list-group-item text-center">Cargando...</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
     </main>
 
     <footer>
@@ -154,7 +266,54 @@
         Alcocer.
       </p>
     </footer>
+    <script type="module">
+      import { BASE_API_URL } from "./scripts/config.js";
+
+      async function cargarRankingGlobal() {
+        const ul = document.getElementById("ranking-global");
+        ul.innerHTML =
+          '<li class="list-group-item text-center">Cargando...</li>';
+
+        try {
+          const res = await fetch(`${BASE_API_URL}/ranking/global`);
+          const data = await res.json();
+
+          if (res.ok && data.jugadores && data.jugadores.length > 0) {
+            ul.innerHTML = "";
+            data.jugadores.forEach((jugador, i) => {
+              ul.innerHTML += `
+  <li class="list-group-item">
+    <div class="d-flex align-items-center">
+      <span class="me-2 fw-bold text-secondary">#${i + 1}</span>
+      <img src="${
+        jugador.avatar_url || "assets/avatar-default.png"
+      }" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+      <div class="flex-grow-1">
+        <div class="fw-bold">${jugador.nombre}</div>
+        <div class="text-muted small">${
+          jugador.clase ?? "Sin clase asignada"
+        }</div>
+      </div>
+      <span class="badge bg-success ms-2">${jugador.puntos} pts</span>
+    </div>
+  </li>
+`;
+            });
+          } else {
+            ul.innerHTML =
+              '<li class="list-group-item text-center">No hay datos disponibles.</li>';
+          }
+        } catch (err) {
+          console.error(err);
+          ul.innerHTML =
+            '<li class="list-group-item text-danger text-center">Error al cargar ranking.</li>';
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", cargarRankingGlobal);
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="scripts/navbar.js"></script>
   </body>
 </html>

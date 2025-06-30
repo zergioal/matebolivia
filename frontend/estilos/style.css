@@ -576,3 +576,192 @@ footer p {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
+
+/* ======== PANEL DE USUARIO ======== */
+
+.panel-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.card.panel-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  margin-bottom: 30px;
+}
+
+.card.panel-card h3 {
+  color: #0d6efd;
+  margin-bottom: 15px;
+}
+
+.card.panel-card img {
+  max-width: 120px;
+  margin-top: 10px;
+  border-radius: 12px;
+}
+
+#lista-insignias li {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  font-size: 15px;
+}
+
+#lista-insignias li:last-child {
+  border-bottom: none;
+}
+
+#lista-avatares {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: start;
+  padding-top: 10px;
+}
+
+#lista-avatares .card {
+  width: 120px;
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+#lista-avatares img {
+  height: 100px;
+  object-fit: cover;
+}
+
+.card-text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+h4.titulo-seccion {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: #444;
+  border-bottom: 2px solid #0d6efd;
+  padding-bottom: 5px;
+}
+
+.user-profile-card {
+  background-color: #f8f9fa;
+  border-left: 5px solid #198754;
+}
+
+.user-avatar-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 3px solid #198754;
+}
+
+.card-title {
+  font-weight: 600;
+}
+
+.input-group .form-control {
+  max-width: 300px;
+}
+
+#lista-clases-docente .list-group-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resumen-clase-item {
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0;
+}
+
+.resumen-clase-item:last-child {
+  border-bottom: none;
+}
+
+.resumen-clase-item {
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0;
+}
+
+.resumen-clase-item:last-child {
+  border-bottom: none;
+}
+
+/* -------- MENÚ DE USUARIO PERSONALIZADO -------- */
+
+.navbar .dropdown-menu-dark {
+  background-color: #1f1f1f;
+  border-radius: 10px;
+  border: 1px solid #343a40;
+}
+
+.navbar .dropdown-menu-dark .dropdown-item {
+  color: #f8f9fa;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.navbar .dropdown-menu-dark .dropdown-item:hover,
+.navbar .dropdown-menu-dark .dropdown-item:focus {
+  background-color: #343a40;
+  color: #ffffff;
+}
+
+.navbar .dropdown-menu-dark .dropdown-divider {
+  border-top-color: #495057;
+}
+
+.navbar .dropdown-menu-dark img.rounded-circle {
+  border: 2px solid #6c757d;
+}
+
+.navbar .dropdown-menu-dark .fw-bold {
+  color: #ffffff;
+}
+
+.navbar .dropdown-menu-dark .text-muted {
+  color: #adb5bd !important;
+}
+
+.navbar .dropdown-menu-dark .text-danger {
+  color: #f87171 !important;
+}
+
+.navbar .dropdown-menu-dark .text-danger:hover {
+  color: #fca5a5 !important;
+  background-color: #3a3a3a;
+}
+
+.juego-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+.juego-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+.ranking-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ranking-list li img {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.list-group-item img {
+  border: 2px solid #198754; /* Bootstrap success */
+}
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}

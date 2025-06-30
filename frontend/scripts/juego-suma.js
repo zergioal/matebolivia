@@ -1,10 +1,13 @@
-// juego-suma.js
+import { BASE_API_URL } from "./config.js";
+import { guardarPuntaje } from "./api.js";
 
-const FACIL_RANGO = 10;
-const MEDIO_RANGO = 20;
-const DIFICIL_RANGO = 25;
+const usuarioId = localStorage.getItem("usuario_id");
+// 👇 USA TU UUID REAL DEL JUEGO "Suma de enteros" de la tabla juegos
+const ID_JUEGO_SUMA_ENTEROS = "018d3167-a4ab-446f-a92a-013f07984a82";
+
 const totalPreguntas = 10;
-const BACKEND = "https://juegosbackend.onrender.com";
+
+const BACKEND = BASE_API_URL;
 
 let dificultad = "facil";
 let tiempoInicio = null;
@@ -14,14 +17,18 @@ let puntaje = 0;
 let actual = 0;
 let preguntas = [];
 
-window.prepararJuego = function prepararJuego() {
+/* ========== INICIO JUEGO ========== */
+export function prepararJuego() {
   document.getElementById("contenedor-boton-iniciar").style.display = "none";
   document.getElementById("bloque-juego").style.display = "block";
   iniciarJuego();
-};
+}
 
 window.setDificultad = function setDificultad(nivel) {
-  dificultad = nivel;
+  if (nivel === "facil") dificultad = "facil";
+  else if (nivel === "medio") dificultad = "medio";
+  else if (nivel === "dificil") dificultad = "dificil";
+
   document
     .querySelectorAll(".btn-nivel")
     .forEach((btn) => btn.classList.remove("seleccionado"));
@@ -49,40 +56,41 @@ function iniciarJuego() {
     btn.classList.remove("seleccionado");
   });
   document.getElementById(`btn-${dificultad}`).classList.add("seleccionado");
-
-  cargarTopSumaGlobal();
 }
 
+/* ========== PREGUNTAS ========== */
 function formatoParentesis(n) {
   if (n < 0) return `(${n})`;
   if (Math.random() < 0.5) return `(+${n})`;
   return `${n}`;
 }
 
-function generarPregunta(nivel, usarRangoGrande) {
-  let min = -100,
-    max = 100,
-    cantidad = 2;
+function generarPregunta(nivel) {
+  let cantidad = 2;
+  let min = -10;
+  let max = 10;
 
   if (nivel === "facil") {
-    min = -FACIL_RANGO;
-    max = FACIL_RANGO;
     cantidad = 2;
+    min = -10;
+    max = 10;
   } else if (nivel === "medio") {
-    min = usarRangoGrande ? -100 : -MEDIO_RANGO;
-    max = usarRangoGrande ? 100 : MEDIO_RANGO;
     cantidad = 3;
+    min = -10;
+    max = 10;
   } else if (nivel === "dificil") {
-    min = usarRangoGrande ? -100 : -DIFICIL_RANGO;
-    max = usarRangoGrande ? 100 : DIFICIL_RANGO;
-    cantidad = Math.floor(Math.random() * 3) + 4;
+    cantidad = 4;
+    min = -12;
+    max = 12;
   }
 
+  // Generar los números aleatorios dentro del rango
   const numeros = Array.from(
     { length: cantidad },
     () => Math.floor(Math.random() * (max - min + 1)) + min
   );
 
+  // Armar el enunciado en notación matemática
   let expr = `\\(${numeros[0]}`;
   let correcta = numeros[0];
   for (let i = 1; i < numeros.length; i++) {
@@ -91,9 +99,10 @@ function generarPregunta(nivel, usarRangoGrande) {
   }
   expr += "\\)";
 
+  // Crear opciones con distractores
   const opciones = [correcta];
   while (opciones.length < 4) {
-    const distractor = correcta + Math.floor(Math.random() * 21) - 10;
+    const distractor = correcta + Math.floor(Math.random() * 11) - 5;
     if (!opciones.includes(distractor)) {
       opciones.push(distractor);
     }
@@ -106,6 +115,7 @@ function generarPregunta(nivel, usarRangoGrande) {
   };
 }
 
+/* ========== CRONÓMETRO ========== */
 function iniciarCronometro() {
   tiempoInicio = Date.now();
   actualizarCronometro();
@@ -129,12 +139,12 @@ function actualizarCronometro() {
   }
 }
 
+/* ========== MOSTRAR PREGUNTA ========== */
 function mostrarPregunta() {
   const p = preguntas[actual];
   const opcionesContainer = document.getElementById("opciones");
   document.getElementById("pregunta").innerHTML = p.enunciado;
 
-  // Limpiar botones previos
   opcionesContainer.innerHTML = "";
   document.getElementById("feedback").textContent = "";
 
@@ -151,10 +161,8 @@ function mostrarPregunta() {
   iniciarCronometro();
 }
 
-window.verificarRespuesta = function verificarRespuesta(
-  seleccionada,
-  botonClickeado
-) {
+/* ========== VERIFICAR RESPUESTA ========== */
+export function verificarRespuesta(seleccionada, botonClickeado) {
   document.querySelectorAll(".opcion").forEach((btn) => (btn.disabled = true));
   detenerCronometro();
   const correcta = preguntas[actual].correcta;
@@ -178,7 +186,7 @@ window.verificarRespuesta = function verificarRespuesta(
   }
 
   setTimeout(() => siguientePregunta(), 1500);
-};
+}
 
 function siguientePregunta() {
   actual++;
@@ -200,7 +208,8 @@ function siguientePregunta() {
   }
 }
 
-window.reiniciarJuego = function reiniciarJuego() {
+/* ========== REINICIAR JUEGO ========== */
+export function reiniciarJuego() {
   clearInterval(cronometroIntervalo);
   tiempoInicio = null;
   tiempoTotal = 0;
@@ -211,48 +220,93 @@ window.reiniciarJuego = function reiniciarJuego() {
   document.getElementById("bloque-juego").style.display = "none";
   document.getElementById("puntaje-final").textContent = "";
   document.getElementById("cronometro").textContent = "⏱️ Tiempo: 0.0 s";
-};
-
-function cargarTopSumaGlobal() {
-  fetch(`${BACKEND}/api/scores/top?juego=suma-enteros`)
-    .then((r) => r.json())
-    .then((lista) => {
-      const ul = document.getElementById("lista-top-suma");
-      ul.innerHTML = "";
-      lista.forEach((p, i) => {
-        ul.innerHTML += `<li>#${i + 1} ${p.nombre} (${p.unidad}) - ${
-          p.puntaje
-        } pts / ${p.tiempo}s [${p.nivel}]</li>`;
-      });
-    })
-    .catch((err) => console.error("Top 10 global error:", err));
 }
 
-function guardarPuntajeSuma(puntajeFinal, tiempoTotal, nivel) {
-  const datos = {
-    nombre: prompt("Tu nombre:")?.trim() || "Anónimo",
-    unidad: prompt("Unidad Educativa:")?.trim() || "Sin unidad",
-    puntaje: Number(puntajeFinal),
-    tiempo: Number(tiempoTotal),
-    nivel,
-    juego: "suma-enteros",
-  };
+/* ========== CARGAR TOP PUNTAJES ========== */
+function cargarTopPorDificultad(claseId = null) {
+  ["facil", "medio", "dificil"].forEach((nivel) => {
+    let url = `${BACKEND}/scores/top?juego=${ID_JUEGO_SUMA_ENTEROS}&nivel=${nivel}`;
 
-  fetch(`${BACKEND}/api/scores`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(datos),
-  })
-    .then((r) => {
-      if (r.ok) {
-        cargarTopSumaGlobal();
-      } else {
-        console.error("⚠️ Error al guardar el puntaje (datos inválidos)");
-      }
-    })
-    .catch((err) => console.error("❌ Error al guardar puntaje:", err));
+    if (claseId) {
+      url += `&clase_id=${claseId}`;
+    }
+
+    fetch(url)
+      .then((r) => r.json())
+      .then((lista) => {
+        const ul = document.getElementById(`lista-top-${nivel}`);
+        ul.innerHTML = "";
+
+        if (!Array.isArray(lista)) {
+          console.error("Respuesta inválida:", lista);
+          ul.innerHTML =
+            "<li class='list-group-item text-danger'>Error en el servidor.</li>";
+          return;
+        }
+
+        if (lista.length === 0) {
+          ul.innerHTML = "<li class='list-group-item'>Sin datos aún.</li>";
+          return;
+        }
+
+        lista.forEach((p, i) => {
+          ul.innerHTML += `
+    <li class="list-group-item">
+      <div class="d-flex align-items-center">
+        <span class="me-2 fw-bold text-secondary">#${i + 1}</span>
+        <img src="${
+          p.avatar_url || "assets/avatar-default.png"
+        }" alt="Avatar" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+        <div class="flex-grow-1">
+          <div class="fw-bold">${p.usuario_nombre}</div>
+          <div class="text-muted small">${
+            p.clases ? p.clases.join(", ") : "Sin clase asignada"
+          }</div>
+        </div>
+        <span class="badge bg-success ms-2">${p.puntaje} pts / ${
+            p.tiempo
+          }s</span>
+      </div>
+    </li>
+  `;
+        });
+      })
+
+      .catch((err) => {
+        console.error(`Error cargando top ${nivel}:`, err);
+        document.getElementById(`lista-top-${nivel}`).innerHTML =
+          "<li class='list-group-item text-danger'>Error al cargar.</li>";
+      });
+  });
+}
+
+/* ========== GUARDAR PUNTAJE ========== */
+async function guardarPuntajeSuma(puntajeFinal, tiempoTotal, nivel) {
+  const usuarioId = localStorage.getItem("usuario_id");
+
+  if (!usuarioId) {
+    alert("⚠️ Debes iniciar sesión para guardar tu puntaje.");
+    return;
+  }
+
+  try {
+    await guardarPuntaje(
+      usuarioId,
+      ID_JUEGO_SUMA_ENTEROS,
+      Number(puntajeFinal),
+      Number(tiempoTotal),
+      nivel
+    );
+
+    console.log("✅ Puntaje guardado correctamente");
+
+    cargarTopPorDificultad();
+  } catch (err) {
+    console.error("❌ Error al guardar puntaje:", err);
+    alert("❌ No se pudo guardar el puntaje. Intenta de nuevo más tarde.");
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  cargarTopSumaGlobal();
+  cargarTopPorDificultad();
 });

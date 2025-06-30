@@ -4,7 +4,9 @@ const FACIL_RANGO = 10;
 const MEDIO_RANGO = 20;
 const DIFICIL_RANGO = 25;
 const totalPreguntas = 10;
-const BACKEND = "https://juegosbackend.onrender.com";
+import { BASE_API_URL } from "./config.js";
+
+const BACKEND = BASE_API_URL;
 
 let dificultad = "facil";
 let tiempoInicio = null;

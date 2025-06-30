@@ -1,41 +1,86 @@
 // scripts/api.js
 
-const API_URL = 'https://juegosbackend.onrender.com/api/scores';
+import { BASE_API_URL } from "./config.js";
+
+export const SCORES_URL = `${BASE_API_URL}/scores`;
 
 /**
  * Envía un nuevo puntaje al backend
- * @param {string} nombre - Nombre del jugador
- * @param {string} juego - Nombre del juego
- * @param {number} puntaje - Puntaje obtenido
+ * @param {string} usuario_id
+ * @param {string} juego_id
+ * @param {number} puntaje
+ * @param {number} tiempo
+ * @param {string} nivel
  */
-export async function guardarPuntaje(nombre, juego, puntaje) {
+export async function guardarPuntaje(
+  usuario_id,
+  juego_id,
+  puntaje,
+  tiempo,
+  nivel
+) {
   try {
-    const respuesta = await fetch(API_URL, {
-      method: 'POST',
+    const payload = {
+      usuario_id,
+      juego_id,
+      puntaje,
+      tiempo,
+      nivel,
+    };
+
+    console.log("Enviando puntaje:", payload);
+
+    const respuesta = await fetch(SCORES_URL, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nombre, juego, puntaje })
+      body: JSON.stringify(payload),
     });
 
     const resultado = await respuesta.json();
-    console.log('Puntaje guardado correctamente:', resultado);
+
+    if (!respuesta.ok) {
+      console.error("Error al guardar puntaje:", resultado);
+      throw new Error(
+        resultado.error || "Error desconocido al guardar puntaje"
+      );
+    }
+
+    console.log("✅ Puntaje guardado correctamente:", resultado);
+    return resultado;
   } catch (error) {
-    console.error('Error al guardar el puntaje:', error);
+    console.error("❌ Error al guardar el puntaje:", error);
+    throw error;
   }
 }
 
 /**
- * Obtiene los mejores puntajes desde el backend
- * @returns {Promise<Array>} - Lista de puntajes
+ * Obtiene el Top 10 para un juego (opcional con filtros)
+ * @param {string} juego_id
+ * @param {string} nivel
+ * @param {string} clase_id
  */
-export async function obtenerPuntajes() {
+export async function obtenerTopPuntajes(
+  juego_id,
+  nivel = null,
+  clase_id = null
+) {
   try {
-    const respuesta = await fetch(API_URL);
+    let url = `${SCORES_URL}/top?juego=${juego_id}`;
+    if (nivel) url += `&nivel=${nivel}`;
+    if (clase_id) url += `&clase_id=${clase_id}`;
+
+    const respuesta = await fetch(url);
     const datos = await respuesta.json();
+
+    if (!respuesta.ok) {
+      throw new Error(datos.error || "Error al obtener top");
+    }
+
     return datos;
   } catch (error) {
-    console.error('Error al obtener puntajes:', error);
+    console.error("❌ Error al obtener top:", error);
     return [];
   }
 }
