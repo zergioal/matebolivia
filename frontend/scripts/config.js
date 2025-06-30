@@ -1,4 +1,4 @@
-const ENV = "local"; // "production" o "local"
+const ENV = "production"; // "production" o "local"
 
 export const BASE_API_URL =
   ENV === "production"
